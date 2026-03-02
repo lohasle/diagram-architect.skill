@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>diagram-architect — Claude Code Skill</title>
+  <meta name="description" content="Production-grade diagram generation for Claude Code. Beautiful HTML diagrams with 5 professional themes, interactive controls, and zero dependencies.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #273548;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #7c3aed;
+      --accent2: #0ea5e9;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --radius: 10px;
+      --font: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,23,42,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo { font-weight: 700; font-size: 15px; letter-spacing: -0.3px; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-btn {
+      background: var(--accent); color: #fff; border: none;
+      padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: opacity .15s;
+    }
+    .nav-btn:hover { opacity: .85; }
+
+    /* ── Layout ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 80px 0; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 100px 0 80px;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,.25) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.4);
+      color: #a78bfa; border-radius: 999px; padding: 4px 14px;
+      font-size: 12px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(36px, 6vw, 64px); font-weight: 800;
+      line-height: 1.1; letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+    h1 span { background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-desc { font-size: 18px; color: var(--text-muted); max-width: 560px; margin: 0 auto 36px; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #fff; border: none;
+      padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: all .15s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; color: var(--text); border: 1px solid var(--border);
+      padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none; transition: all .15s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: var(--text-muted); }
+
+    /* ── Stats ── */
+    .stats {
+      display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+      margin-top: 60px; padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Section headers ── */
+    .section-header { text-align: center; margin-bottom: 56px; }
+    .section-label {
+      display: inline-block; color: var(--accent2); font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;
+    }
+    h2 { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+    .section-desc { color: var(--text-muted); font-size: 17px; max-width: 520px; margin: 0 auto; }
+
+    /* ── Feature grid ── */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 28px; transition: border-color .2s;
+    }
+    .feature-card:hover { border-color: var(--accent); }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; font-size: 22px;
+    }
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── Themes showcase ── */
+    .themes-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+    .theme-pill {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: 999px; padding: 8px 18px; cursor: pointer;
+      transition: all .2s; user-select: none;
+    }
+    .theme-pill:hover { border-color: var(--text-muted); }
+    .theme-pill.active { border-color: var(--accent); background: rgba(124,58,237,.1); }
+    .theme-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .theme-pill span { font-size: 13px; font-weight: 600; }
+
+    .diagram-preview {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .preview-bar {
+      background: var(--surface2); border-bottom: 1px solid var(--border);
+      padding: 10px 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .preview-title { font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+    .preview-body { padding: 32px; display: flex; justify-content: center; min-height: 320px; align-items: center; }
+    .mermaid { display: flex; justify-content: center; }
+
+    /* ── Install ── */
+    .install-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .install-tabs { display: flex; border-bottom: 1px solid var(--border); }
+    .install-tab {
+      padding: 12px 24px; font-size: 13px; font-weight: 600; cursor: pointer;
+      color: var(--text-muted); border: none; background: none; border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: all .15s;
+    }
+    .install-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .install-content { display: none; padding: 28px; }
+    .install-content.active { display: block; }
+    pre {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 20px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.7;
+      overflow-x: auto; color: #e2e8f0;
+    }
+    .comment { color: #64748b; }
+    .cmd { color: #38bdf8; }
+    .str { color: #a3e635; }
+
+    /* ── Usage ── */
+    .usage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 720px) { .usage-grid { grid-template-columns: 1fr; } }
+    .usage-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px;
+    }
+    .usage-card h3 { font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .usage-examples { display: flex; flex-direction: column; gap: 10px; }
+    .example-item {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 16px; font-size: 13px; line-height: 1.5;
+    }
+    .example-tag { color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 4px; }
+    .keyboard-grid { display: flex; flex-direction: column; gap: 10px; }
+    .kb-row { display: flex; align-items: center; justify-content: space-between; }
+    .kb-key {
+      font-family: var(--mono); font-size: 12px; font-weight: 600;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 5px; padding: 3px 10px; color: var(--text);
+    }
+    .kb-label { font-size: 13px; color: var(--text-muted); }
+
+    /* ── Engine table ── */
+    .engine-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .engine-table th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); }
+    .engine-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .engine-table tr:last-child td { border-bottom: none; }
+    .engine-table tr:hover td { background: rgba(255,255,255,.02); }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+    .badge-green { background: rgba(16,185,129,.15); color: #34d399; }
+    .badge-blue { background: rgba(14,165,233,.15); color: #38bdf8; }
+    .badge-purple { background: rgba(124,58,237,.15); color: #a78bfa; }
+
+    /* ── CTA ── */
+    .cta {
+      text-align: center; padding: 80px 24px;
+      background: radial-gradient(ellipse 60% 60% at 50% 100%, rgba(124,58,237,.2) 0%, transparent 70%);
+    }
+    .cta h2 { margin-bottom: 16px; }
+    .cta p { color: var(--text-muted); margin-bottom: 32px; font-size: 17px; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 28px 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+      font-size: 13px; color: var(--text-muted);
+    }
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 20px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .stats { gap: 28px; }
+      h2 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">diagram<span>-architect</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#themes">Themes</a>
+    <a href="#install">Install</a>
+    <a href="#usage">Usage</a>
+    <a href="https://github.com/lohasle/diagram-architect.skill">GitHub</a>
+  </div>
+  <a class="nav-btn" href="#install">Install Skill</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">Claude Code Skill</div>
+    <h1>Draw diagrams by<br><span>describing them</span></h1>
+    <p class="hero-desc">Production-grade architecture diagrams, flowcharts, and sequence diagrams — beautiful HTML output with professional themes and interactive controls.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#install">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Install Now
+      </a>
+      <a class="btn-outline" href="https://github.com/lohasle/diagram-architect.skill">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num" style="color:#a78bfa">8+</div><div class="stat-label">Diagram Types</div></div>
+      <div class="stat"><div class="stat-num" style="color:#38bdf8">5</div><div class="stat-label">Professional Themes</div></div>
+      <div class="stat"><div class="stat-num" style="color:#34d399">0</div><div class="stat-label">Runtime Dependencies</div></div>
+      <div class="stat"><div class="stat-num" style="color:#f59e0b">3</div><div class="stat-label">Rendering Engines</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Features</div>
+      <h2>Everything in one HTML file</h2>
+      <p class="section-desc">Every generated diagram is a single, self-contained HTML file — open it, share it, no server needed.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(124,58,237,.15)">🎨</div>
+        <h3>5 Professional Themes</h3>
+        <p>Corporate navy, Dark Mode slate, Minimal grayscale, Tech purple-cyan, Warm amber — switchable at runtime without re-generating.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(14,165,233,.15)">🔍</div>
+        <h3>Interactive Controls</h3>
+        <p>Zoom 25%–300% with mouse wheel or buttons, drag to pan, keyboard shortcuts. Works on desktop and mobile touch.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(16,185,129,.15)">📤</div>
+        <h3>Export SVG &amp; PNG</h3>
+        <p>Export as vector SVG for infinite scaling or 2× retina PNG for presentations. One click, no plugins.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,.15)">⚡</div>
+        <h3>Zero Dependencies</h3>
+        <p>Mermaid.js is loaded via CDN — no npm install, no CLI tools, no build step. The HTML file works offline after first load.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,.15)">🏗️</div>
+        <h3>8+ Diagram Types</h3>
+        <p>Flowchart, Sequence, ER, State, Class, Mind Map, Gantt, C4 Architecture — all from plain text descriptions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,85,247,.15)">🖨️</div>
+        <h3>Print Ready</h3>
+        <p>Print-optimized CSS hides controls, removes backgrounds, and ensures clean output for documentation and slides.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Themes Live Demo -->
+<section id="themes" style="background: linear-gradient(180deg, transparent, rgba(124,58,237,.05), transparent);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Themes</div>
+      <h2>Live theme preview</h2>
+      <p class="section-desc">Click a theme to see how the same diagram looks in each style.</p>
+    </div>
+
+    <div class="themes-row">
+      <div class="theme-pill active" data-theme="corporate" onclick="switchTheme(this)">
+        <div class="theme-dot" style="background:#1e3a5a"></div><span>Corporate</span>
+      </div>
+      <div class="theme-pill" data-theme="dark" onclick="switchTheme(this)">
+        <div class="theme-dot" style="background:#334155"></div><span>Dark Mode</span>
+      </div>
+      <div class="theme-pill" data-theme="minimal" onclick="switchTheme(this)">
+        <div class="theme-dot" style="background:#374151"></div><span>Minimal</span>
+      </div>
+      <div class="theme-pill" data-theme="tech" onclick="switchTheme(this)">
+        <div class="theme-dot" style="background:linear-gradient(135deg,#7c3aed,#0ea5e9)"></div><span>Tech</span>
+      </div>
+      <div class="theme-pill" data-theme="warm" onclick="switchTheme(this)">
+        <div class="theme-dot" style="background:#92400e"></div><span>Warm</span>
+      </div>
+    </div>
+
+    <div class="diagram-preview">
+      <div class="preview-bar">
+        <div class="preview-dot" style="background:#ef4444"></div>
+        <div class="preview-dot" style="background:#f59e0b"></div>
+        <div class="preview-dot" style="background:#10b981"></div>
+        <span class="preview-title" id="preview-title">Corporate Theme — System Architecture</span>
+      </div>
+      <div class="preview-body" id="preview-body">
+        <div class="mermaid" id="live-diagram">
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e3a5a','primaryTextColor': '#ffffff','primaryBorderColor': '#1e40af','lineColor': '#64748b','secondaryColor': '#3b82f6','tertiaryColor': '#e0e7ff','background': '#f8fafc','edgeLabelBackground': '#ffffff'}}}%%
+flowchart LR
+    subgraph CLIENT["Client Layer"]
+        WEB["Web App"]:::c
+        MOB["Mobile"]:::c
+    end
+    subgraph SERVICES["Services"]
+        GW["API Gateway"]:::s
+        AUTH["Auth"]:::s
+        SVC["Business Service"]:::s
+    end
+    subgraph DATA["Data Layer"]
+        DB[(Database)]:::d
+        CACHE[(Redis)]:::d
+        MQ[Message Queue]:::d
+    end
+    CLIENT --> SERVICES
+    GW --> AUTH
+    GW --> SVC
+    SVC --> DB
+    SVC --> CACHE
+    SVC --> MQ
+    classDef c fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef s fill:#1e3a5a,stroke:#1e40af,color:#fff
+    classDef d fill:#f59e0b,stroke:#d97706,color:#fff
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Install -->
+<section id="install">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Installation</div>
+      <h2>Get started in 30 seconds</h2>
+      <p class="section-desc">Two ways to install — pick whichever fits your workflow.</p>
+    </div>
+    <div class="install-section">
+      <div class="install-tabs">
+        <button class="install-tab active" onclick="switchTab(this, 'skill-file')">Install .skill file</button>
+        <button class="install-tab" onclick="switchTab(this, 'git-clone')">Clone from Git</button>
+        <button class="install-tab" onclick="switchTab(this, 'verify')">Verify</button>
+      </div>
+      <div id="tab-skill-file" class="install-content active">
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">Download and place the packaged <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">.skill</code> file in your skills directory:</p>
+        <pre><span class="comment"># 1. Download the latest release</span>
+<span class="cmd">curl</span> -L https://github.com/lohasle/diagram-architect.skill/releases/latest/download/diagram-architect.skill \
+  -o ~/.claude/skills/diagram-architect.skill
+
+<span class="comment"># 2. Claude Code auto-discovers it on next launch</span>
+<span class="comment"># No further configuration needed</span></pre>
+      </div>
+      <div id="tab-git-clone" class="install-content">
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">Clone the source directly into your skills directory:</p>
+        <pre><span class="comment"># Clone into skills directory as 'diagram-architect'</span>
+<span class="cmd">git clone</span> <span class="str">https://github.com/lohasle/diagram-architect.skill.git</span> \
+  ~/.claude/skills/diagram-architect
+
+<span class="comment"># Update later with:</span>
+<span class="cmd">cd</span> ~/.claude/skills/diagram-architect &amp;&amp; <span class="cmd">git pull</span></pre>
+      </div>
+      <div id="tab-verify" class="install-content">
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">Confirm the skill is installed:</p>
+        <pre><span class="comment"># Check the skills directory</span>
+<span class="cmd">ls</span> ~/.claude/skills/
+<span class="comment"># → diagram-architect/  (or diagram-architect.skill)</span>
+
+<span class="comment"># In Claude Code, type /skills to see active skills</span>
+<span class="comment"># diagram-architect should appear in the list</span></pre>
+        <p style="color:var(--text-muted);font-size:14px;margin-top:16px;">For D2/PlantUML rendering via <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">render.py</code>:</p>
+        <pre><span class="cmd">pip install</span> requests</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Usage -->
+<section id="usage">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Usage</div>
+      <h2>Just describe what you need</h2>
+      <p class="section-desc">No syntax to learn. Claude generates the diagram code, picks the best theme, and writes the HTML file.</p>
+    </div>
+    <div class="usage-grid">
+      <div class="usage-card">
+        <h3>Example Prompts</h3>
+        <div class="usage-examples">
+          <div class="example-item">
+            <span class="example-tag">Architecture</span>
+            "Draw a system architecture for our e-commerce platform"
+          </div>
+          <div class="example-item">
+            <span class="example-tag">Sequence</span>
+            "Create a sequence diagram for the OAuth login flow"
+          </div>
+          <div class="example-item">
+            <span class="example-tag">ER Diagram</span>
+            "Generate an ER diagram for the orders database"
+          </div>
+          <div class="example-item">
+            <span class="example-tag">C4 Model</span>
+            "Make a C4 container diagram for our IoT edge service"
+          </div>
+          <div class="example-item">
+            <span class="example-tag">With Theme</span>
+            "Draw the data pipeline using the Dark Mode theme"
+          </div>
+        </div>
+      </div>
+      <div class="usage-card">
+        <h3>Keyboard Shortcuts</h3>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px;">In the generated HTML file:</p>
+        <div class="keyboard-grid">
+          <div class="kb-row"><span class="kb-label">Zoom in</span><kbd class="kb-key">Ctrl +</kbd></div>
+          <div class="kb-row"><span class="kb-label">Zoom out</span><kbd class="kb-key">Ctrl −</kbd></div>
+          <div class="kb-row"><span class="kb-label">Reset view</span><kbd class="kb-key">Ctrl 0</kbd></div>
+          <div class="kb-row"><span class="kb-label">Print</span><kbd class="kb-key">Ctrl P</kbd></div>
+        </div>
+        <div style="margin-top:24px">
+          <h3>Output File</h3>
+          <p style="color:var(--text-muted);font-size:13px;margin-top:8px">Claude writes a <code style="font-family:var(--mono);background:var(--surface2);padding:2px 5px;border-radius:4px">.html</code> file in the current directory. Open it in any browser — no server required.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Engines -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Engines</div>
+      <h2>Right engine for every diagram</h2>
+      <p class="section-desc">Claude automatically selects the best rendering engine based on your diagram type.</p>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+      <table class="engine-table">
+        <thead>
+          <tr>
+            <th>Engine</th>
+            <th>Best For</th>
+            <th>Method</th>
+            <th>Dependency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Mermaid.js</strong></td>
+            <td>Flowcharts, Sequence, ER, State, Class, Gantt, Mind Map</td>
+            <td><span class="badge badge-green">CDN</span></td>
+            <td style="color:var(--text-muted)">None</td>
+          </tr>
+          <tr>
+            <td><strong>D2</strong></td>
+            <td>Infrastructure, cloud deployment, network topology</td>
+            <td><span class="badge badge-blue">kroki.io API</span></td>
+            <td style="color:var(--text-muted)">pip install requests</td>
+          </tr>
+          <tr>
+            <td><strong>PlantUML</strong></td>
+            <td>C4 Architecture (Context, Container, Component)</td>
+            <td><span class="badge badge-purple">kroki.io API</span></td>
+            <td style="color:var(--text-muted)">pip install requests</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container">
+    <h2>Start drawing in seconds</h2>
+    <p>Install the skill and turn text descriptions into production-ready diagrams.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn-primary" href="https://github.com/lohasle/diagram-architect.skill">View on GitHub</a>
+      <a class="btn-outline" href="#install">Installation Guide</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <span>Built for <a href="https://claude.ai/code">Claude Code</a> · MIT License</span>
+    <div class="footer-links">
+      <a href="https://github.com/lohasle/diagram-architect.skill">GitHub</a>
+      <a href="https://mermaid.js.org">Mermaid.js</a>
+      <a href="https://kroki.io">kroki.io</a>
+      <a href="https://d2lang.com">D2</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mermaid init
+  mermaid.initialize({ startOnLoad: true, theme: 'base', securityLevel: 'loose',
+    themeVariables: { primaryColor:'#1e3a5a', primaryTextColor:'#ffffff', primaryBorderColor:'#1e40af', lineColor:'#64748b', secondaryColor:'#3b82f6', tertiaryColor:'#e0e7ff', background:'#f8fafc', edgeLabelBackground:'#ffffff' }
+  });
+
+  const themeConfigs = {
+    corporate: {
+      label: 'Corporate Theme — System Architecture',
+      bgColor: '#f8fafc',
+      config: { theme:'base', themeVariables:{ primaryColor:'#1e3a5a', primaryTextColor:'#ffffff', primaryBorderColor:'#1e40af', lineColor:'#64748b', secondaryColor:'#3b82f6', tertiaryColor:'#e0e7ff', background:'#f8fafc', edgeLabelBackground:'#ffffff' } }
+    },
+    dark: {
+      label: 'Dark Mode Theme — System Architecture',
+      bgColor: '#0f172a',
+      config: { theme:'dark', themeVariables:{ primaryColor:'#1e293b', primaryTextColor:'#f1f5f9', primaryBorderColor:'#334155', lineColor:'#64748b', secondaryColor:'#0f172a', tertiaryColor:'#334155', background:'#0f172a', edgeLabelBackground:'#1e293b' } }
+    },
+    minimal: {
+      label: 'Minimal Theme — System Architecture',
+      bgColor: '#ffffff',
+      config: { theme:'base', themeVariables:{ primaryColor:'#374151', primaryTextColor:'#ffffff', primaryBorderColor:'#1f2937', lineColor:'#9ca3af', secondaryColor:'#6b7280', tertiaryColor:'#f3f4f6', background:'#ffffff', edgeLabelBackground:'#ffffff' } }
+    },
+    tech: {
+      label: 'Tech Theme — System Architecture',
+      bgColor: '#f0f9ff',
+      config: { theme:'base', themeVariables:{ primaryColor:'#7c3aed', primaryTextColor:'#ffffff', primaryBorderColor:'#6d28d9', lineColor:'#0369a1', secondaryColor:'#0ea5e9', tertiaryColor:'#cffafe', background:'#f0f9ff', edgeLabelBackground:'#ffffff' } }
+    },
+    warm: {
+      label: 'Warm Theme — System Architecture',
+      bgColor: '#fffbeb',
+      config: { theme:'base', themeVariables:{ primaryColor:'#92400e', primaryTextColor:'#fef3c7', primaryBorderColor:'#78350f', lineColor:'#b45309', secondaryColor:'#f59e0b', tertiaryColor:'#fef3c7', background:'#fffbeb', edgeLabelBackground:'#fef3c7' } }
+    }
+  };
+
+  const diagramSource = `flowchart LR
+    subgraph CLIENT["Client Layer"]
+        WEB["Web App"]:::c
+        MOB["Mobile"]:::c
+    end
+    subgraph SERVICES["Services"]
+        GW["API Gateway"]:::s
+        AUTH["Auth"]:::s
+        SVC["Business Service"]:::s
+    end
+    subgraph DATA["Data Layer"]
+        DB[(Database)]:::d
+        CACHE[(Redis)]:::d
+        MQ[Message Queue]:::d
+    end
+    CLIENT --> SERVICES
+    GW --> AUTH
+    GW --> SVC
+    SVC --> DB
+    SVC --> CACHE
+    SVC --> MQ
+    classDef c fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef s fill:#1e3a5a,stroke:#1e40af,color:#fff
+    classDef d fill:#f59e0b,stroke:#d97706,color:#fff`;
+
+  async function switchTheme(pill) {
+    document.querySelectorAll('.theme-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    const themeName = pill.dataset.theme;
+    const cfg = themeConfigs[themeName];
+    document.getElementById('preview-title').textContent = cfg.label;
+    document.getElementById('preview-body').style.background = cfg.bgColor;
+
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', ...cfg.config });
+    const container = document.getElementById('live-diagram');
+    container.removeAttribute('data-processed');
+    container.innerHTML = `%%{init: ${JSON.stringify({...cfg.config})} }%%\n${diagramSource}`;
+    try {
+      await mermaid.run({ nodes: [container] });
+    } catch(e) { console.warn(e); }
+  }
+
+  function switchTab(tab, id) {
+    document.querySelectorAll('.install-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.install-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+</script>
+</body>
+</html>
