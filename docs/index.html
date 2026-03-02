@@ -133,6 +133,17 @@
     }
     .theme-pill:hover { border-color: var(--text-muted); }
     .theme-pill.active { border-color: var(--accent); background: rgba(124,58,237,.1); }
+
+    /* ── Architecture Type Tabs ── */
+    .arch-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; justify-content: center; }
+    .arch-tab {
+      padding: 9px 22px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text-muted); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all .15s; font-family: var(--font);
+    }
+    .arch-tab:hover { color: var(--text); border-color: var(--text-muted); }
+    .arch-tab.active { background: rgba(124,58,237,.15); border-color: var(--accent); color: #a78bfa; }
+    .preview-desc { text-align: center; margin-top: 14px; font-size: 13px; color: var(--text-muted); }
     .theme-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
     .theme-pill span { font-size: 13px; font-weight: 600; }
 
@@ -311,15 +322,24 @@
   </div>
 </section>
 
-<!-- Themes Live Demo -->
+<!-- AI Architecture Live Demo -->
 <section id="themes" style="background: linear-gradient(180deg, transparent, rgba(124,58,237,.05), transparent);">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">Themes</div>
-      <h2>Live theme preview</h2>
-      <p class="section-desc">Click a theme to see how the same diagram looks in each style.</p>
+      <div class="section-label">实时演示 · Live Demo</div>
+      <h2>AI 架构图四大维度</h2>
+      <p class="section-desc">点击架构类型切换图表，点击色块切换主题——实时渲染，零延迟。</p>
     </div>
 
+    <!-- Architecture type tabs -->
+    <div class="arch-tabs">
+      <button class="arch-tab active" data-type="app" onclick="switchArchType(this)">应用架构</button>
+      <button class="arch-tab" data-type="data" onclick="switchArchType(this)">数据架构</button>
+      <button class="arch-tab" data-type="deploy" onclick="switchArchType(this)">部署架构</button>
+      <button class="arch-tab" data-type="module" onclick="switchArchType(this)">模块架构</button>
+    </div>
+
+    <!-- Theme switcher -->
     <div class="themes-row">
       <div class="theme-pill active" data-theme="corporate" onclick="switchTheme(this)">
         <div class="theme-dot" style="background:#1e3a5a"></div><span>Corporate</span>
@@ -343,38 +363,49 @@
         <div class="preview-dot" style="background:#ef4444"></div>
         <div class="preview-dot" style="background:#f59e0b"></div>
         <div class="preview-dot" style="background:#10b981"></div>
-        <span class="preview-title" id="preview-title">Corporate Theme — System Architecture</span>
+        <span class="preview-title" id="preview-title">AI 应用架构 — Corporate 主题</span>
       </div>
       <div class="preview-body" id="preview-body">
         <div class="mermaid" id="live-diagram">
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e3a5a','primaryTextColor': '#ffffff','primaryBorderColor': '#1e40af','lineColor': '#64748b','secondaryColor': '#3b82f6','tertiaryColor': '#e0e7ff','background': '#f8fafc','edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    subgraph CLIENT["Client Layer"]
-        WEB["Web App"]:::c
-        MOB["Mobile"]:::c
+    subgraph CLIENT["客户端层"]
+        WEB["Web 应用"]:::c
+        SDK["API 客户端"]:::c
     end
-    subgraph SERVICES["Services"]
-        GW["API Gateway"]:::s
-        AUTH["Auth"]:::s
-        SVC["Business Service"]:::s
+    subgraph APP["应用层"]
+        GW["API 网关"]:::a
+        PM["Prompt 管理"]:::a
+        SM["会话管理"]:::a
     end
-    subgraph DATA["Data Layer"]
-        DB[(Database)]:::d
-        CACHE[(Redis)]:::d
-        MQ[Message Queue]:::d
+    subgraph AI["AI 服务"]
+        LLM["LLM 服务"]:::ai
+        EMB["Embedding"]:::ai
+        RAG["RAG 引擎"]:::ai
     end
-    CLIENT --> SERVICES
-    GW --> AUTH
-    GW --> SVC
-    SVC --> DB
-    SVC --> CACHE
-    SVC --> MQ
+    subgraph DATA["数据层"]
+        VDB[("向量数据库")]:::d
+        DOCS[("文档存储")]:::d
+        CACHE[("Redis 缓存")]:::d
+    end
+    CLIENT --> GW
+    GW --> PM
+    GW --> SM
+    PM --> LLM
+    SM --> LLM
+    RAG --> LLM
+    EMB --> VDB
+    RAG --> VDB
+    RAG --> DOCS
+    LLM --> CACHE
     classDef c fill:#3b82f6,stroke:#1e40af,color:#fff
-    classDef s fill:#1e3a5a,stroke:#1e40af,color:#fff
+    classDef a fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef ai fill:#10b981,stroke:#059669,color:#fff
     classDef d fill:#f59e0b,stroke:#d97706,color:#fff
         </div>
       </div>
     </div>
+    <p class="preview-desc" id="preview-desc">RAG 问答平台 — 从客户端到 LLM 服务的完整分层架构</p>
   </div>
 </section>
 
@@ -435,27 +466,27 @@ flowchart LR
     </div>
     <div class="usage-grid">
       <div class="usage-card">
-        <h3>Example Prompts</h3>
+        <h3>AI 架构示例 Prompts</h3>
         <div class="usage-examples">
           <div class="example-item">
-            <span class="example-tag">Architecture</span>
-            "Draw a system architecture for our e-commerce platform"
+            <span class="example-tag">应用架构</span>
+            "画一个 RAG 问答平台的应用架构图，使用 Tech 主题"
           </div>
           <div class="example-item">
-            <span class="example-tag">Sequence</span>
-            "Create a sequence diagram for the OAuth login flow"
+            <span class="example-tag">数据架构</span>
+            "生成 AI 知识库系统的数据处理流水线架构图"
           </div>
           <div class="example-item">
-            <span class="example-tag">ER Diagram</span>
-            "Generate an ER diagram for the orders database"
+            <span class="example-tag">部署架构</span>
+            "画出生产环境 AI 推理服务的部署架构，包含 GPU 集群和监控"
           </div>
           <div class="example-item">
-            <span class="example-tag">C4 Model</span>
-            "Make a C4 container diagram for our IoT edge service"
+            <span class="example-tag">模块架构</span>
+            "绘制 AI Agent 框架的模块架构图，使用 Dark Mode 主题"
           </div>
           <div class="example-item">
-            <span class="example-tag">With Theme</span>
-            "Draw the data pipeline using the Dark Mode theme"
+            <span class="example-tag">时序图</span>
+            "画用户与 LLM 服务交互的时序图，包含 RAG 检索过程"
           </div>
         </div>
       </div>
@@ -546,87 +577,220 @@ flowchart LR
 </footer>
 
 <script>
-  // Mermaid init
-  mermaid.initialize({ startOnLoad: true, theme: 'base', securityLevel: 'loose',
-    themeVariables: { primaryColor:'#1e3a5a', primaryTextColor:'#ffffff', primaryBorderColor:'#1e40af', lineColor:'#64748b', secondaryColor:'#3b82f6', tertiaryColor:'#e0e7ff', background:'#f8fafc', edgeLabelBackground:'#ffffff' }
-  });
-
+  // ── Theme configurations ──
   const themeConfigs = {
-    corporate: {
-      label: 'Corporate Theme — System Architecture',
-      bgColor: '#f8fafc',
-      config: { theme:'base', themeVariables:{ primaryColor:'#1e3a5a', primaryTextColor:'#ffffff', primaryBorderColor:'#1e40af', lineColor:'#64748b', secondaryColor:'#3b82f6', tertiaryColor:'#e0e7ff', background:'#f8fafc', edgeLabelBackground:'#ffffff' } }
+    corporate: { label:'Corporate', bgColor:'#f8fafc', config:{ theme:'base', themeVariables:{ primaryColor:'#1e3a5a', primaryTextColor:'#ffffff', primaryBorderColor:'#1e40af', lineColor:'#64748b', secondaryColor:'#3b82f6', tertiaryColor:'#e0e7ff', background:'#f8fafc', edgeLabelBackground:'#ffffff' } } },
+    dark:      { label:'Dark Mode', bgColor:'#0f172a', config:{ theme:'dark', themeVariables:{ primaryColor:'#1e293b', primaryTextColor:'#f1f5f9', primaryBorderColor:'#334155', lineColor:'#64748b', secondaryColor:'#0f172a', tertiaryColor:'#334155', background:'#0f172a', edgeLabelBackground:'#1e293b' } } },
+    minimal:   { label:'Minimal',   bgColor:'#ffffff', config:{ theme:'base', themeVariables:{ primaryColor:'#374151', primaryTextColor:'#ffffff', primaryBorderColor:'#1f2937', lineColor:'#9ca3af', secondaryColor:'#6b7280', tertiaryColor:'#f3f4f6', background:'#ffffff', edgeLabelBackground:'#ffffff' } } },
+    tech:      { label:'Tech',      bgColor:'#f0f9ff', config:{ theme:'base', themeVariables:{ primaryColor:'#7c3aed', primaryTextColor:'#ffffff', primaryBorderColor:'#6d28d9', lineColor:'#0369a1', secondaryColor:'#0ea5e9', tertiaryColor:'#cffafe', background:'#f0f9ff', edgeLabelBackground:'#ffffff' } } },
+    warm:      { label:'Warm',      bgColor:'#fffbeb', config:{ theme:'base', themeVariables:{ primaryColor:'#92400e', primaryTextColor:'#fef3c7', primaryBorderColor:'#78350f', lineColor:'#b45309', secondaryColor:'#f59e0b', tertiaryColor:'#fef3c7', background:'#fffbeb', edgeLabelBackground:'#fef3c7' } } }
+  };
+
+  // ── AI Architecture diagram sources ──
+  const diagrams = {
+    app: {
+      title: 'AI 应用架构',
+      desc:  'RAG 问答平台 — 从客户端到 LLM 服务的完整分层架构',
+      source: `flowchart LR
+    subgraph CLIENT["客户端层"]
+        WEB["Web 应用"]:::c
+        SDK["API 客户端"]:::c
+    end
+    subgraph APP["应用层"]
+        GW["API 网关"]:::a
+        PM["Prompt 管理"]:::a
+        SM["会话管理"]:::a
+    end
+    subgraph AI["AI 服务"]
+        LLM["LLM 服务"]:::ai
+        EMB["Embedding"]:::ai
+        RAG["RAG 引擎"]:::ai
+    end
+    subgraph DATA["数据层"]
+        VDB[("向量数据库")]:::d
+        DOCS[("文档存储")]:::d
+        CACHE[("Redis 缓存")]:::d
+    end
+    CLIENT --> GW
+    GW --> PM
+    GW --> SM
+    PM --> LLM
+    SM --> LLM
+    RAG --> LLM
+    EMB --> VDB
+    RAG --> VDB
+    RAG --> DOCS
+    LLM --> CACHE
+    classDef c fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef a fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef ai fill:#10b981,stroke:#059669,color:#fff
+    classDef d fill:#f59e0b,stroke:#d97706,color:#fff`
     },
-    dark: {
-      label: 'Dark Mode Theme — System Architecture',
-      bgColor: '#0f172a',
-      config: { theme:'dark', themeVariables:{ primaryColor:'#1e293b', primaryTextColor:'#f1f5f9', primaryBorderColor:'#334155', lineColor:'#64748b', secondaryColor:'#0f172a', tertiaryColor:'#334155', background:'#0f172a', edgeLabelBackground:'#1e293b' } }
+    data: {
+      title: 'AI 数据架构',
+      desc:  'AI 知识库数据流水线 — 从采集到 RAG 检索生成的全链路',
+      source: `flowchart LR
+    subgraph SRC["数据源"]
+        PDF["PDF 文档"]:::s
+        DB["结构化数据库"]:::s
+        WEB["网页内容"]:::s
+    end
+    subgraph ETL["数据处理"]
+        PARSE["解析提取"]:::p
+        CHUNK["语义切分"]:::p
+        EMBED["向量化"]:::p
+    end
+    subgraph STORE["存储层"]
+        VDB[("向量数据库")]:::st
+        OBJ[("对象存储 OSS")]:::st
+        META[("元数据 MySQL")]:::st
+    end
+    subgraph SERVE["检索生成"]
+        SEARCH["语义检索 Top-K"]:::sv
+        RERANK["重排序 Cross-Encoder"]:::sv
+        GEN["LLM 生成回答"]:::sv
+    end
+    SRC --> ETL
+    PARSE --> CHUNK
+    CHUNK --> EMBED
+    EMBED --> VDB
+    PARSE --> OBJ
+    CHUNK --> META
+    VDB --> SEARCH
+    SEARCH --> RERANK
+    RERANK --> GEN
+    classDef s fill:#1e3a5a,stroke:#1e40af,color:#fff
+    classDef p fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef st fill:#f59e0b,stroke:#d97706,color:#fff
+    classDef sv fill:#10b981,stroke:#059669,color:#fff`
     },
-    minimal: {
-      label: 'Minimal Theme — System Architecture',
-      bgColor: '#ffffff',
-      config: { theme:'base', themeVariables:{ primaryColor:'#374151', primaryTextColor:'#ffffff', primaryBorderColor:'#1f2937', lineColor:'#9ca3af', secondaryColor:'#6b7280', tertiaryColor:'#f3f4f6', background:'#ffffff', edgeLabelBackground:'#ffffff' } }
+    deploy: {
+      title: 'AI 部署架构',
+      desc:  '生产级 GPU 推理集群完整部署拓扑 — 含边缘层、计算层与运维层',
+      source: `flowchart TD
+    USERS["用户 / 客户端"]:::u
+    subgraph EDGE["边缘层"]
+        CDN["CDN 加速"]:::e
+        WAF["WAF 防火墙"]:::e
+    end
+    subgraph PLATFORM["接入层"]
+        LB["负载均衡 Nginx"]:::p
+        GW["API 网关 Kong"]:::p
+    end
+    subgraph COMPUTE["计算层"]
+        APP["应用服务 x3"]:::c
+        GPU["GPU 推理集群 A100"]:::gpu
+        WORKER["异步 Worker"]:::c
+    end
+    subgraph INFRA["存储层"]
+        VDB[("向量数据库")]:::d
+        RDS[("MySQL RDS")]:::d
+        REDIS[("Redis Cluster")]:::d
+    end
+    subgraph OPS["运维层"]
+        MON["Prometheus 监控"]:::o
+        LOG["ELK 日志系统"]:::o
+    end
+    USERS --> CDN --> WAF --> LB --> GW
+    GW --> APP
+    GW --> WORKER
+    APP --> GPU
+    APP --> VDB
+    APP --> RDS
+    APP --> REDIS
+    WORKER --> VDB
+    GPU -.-> MON
+    APP -.-> LOG
+    classDef u fill:#6366f1,stroke:#4f46e5,color:#fff
+    classDef e fill:#0ea5e9,stroke:#0284c7,color:#fff
+    classDef p fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef c fill:#1e3a5a,stroke:#1e40af,color:#fff
+    classDef gpu fill:#ef4444,stroke:#dc2626,color:#fff
+    classDef d fill:#f59e0b,stroke:#d97706,color:#fff
+    classDef o fill:#10b981,stroke:#059669,color:#fff`
     },
-    tech: {
-      label: 'Tech Theme — System Architecture',
-      bgColor: '#f0f9ff',
-      config: { theme:'base', themeVariables:{ primaryColor:'#7c3aed', primaryTextColor:'#ffffff', primaryBorderColor:'#6d28d9', lineColor:'#0369a1', secondaryColor:'#0ea5e9', tertiaryColor:'#cffafe', background:'#f0f9ff', edgeLabelBackground:'#ffffff' } }
-    },
-    warm: {
-      label: 'Warm Theme — System Architecture',
-      bgColor: '#fffbeb',
-      config: { theme:'base', themeVariables:{ primaryColor:'#92400e', primaryTextColor:'#fef3c7', primaryBorderColor:'#78350f', lineColor:'#b45309', secondaryColor:'#f59e0b', tertiaryColor:'#fef3c7', background:'#fffbeb', edgeLabelBackground:'#fef3c7' } }
+    module: {
+      title: 'AI 模块架构',
+      desc:  'AI Agent 框架 — 核心、模型、记忆、工具四层模块组成',
+      source: `flowchart LR
+    subgraph AGENT["Agent 核心"]
+        PLAN["任务规划"]:::core
+        EXEC["任务执行"]:::core
+        CTX["上下文管理"]:::core
+    end
+    subgraph MODELS["模型层"]
+        LLM["语言模型 LLM"]:::model
+        EMB["嵌入模型 Embedding"]:::model
+        VISION["视觉模型 Vision"]:::model
+    end
+    subgraph MEMORY["记忆层"]
+        SHORT["短期记忆"]:::mem
+        LONG["长期记忆 向量存储"]:::mem
+        KG["实体记忆 知识图谱"]:::mem
+    end
+    subgraph TOOLS["工具层"]
+        SEARCH["搜索工具"]:::tool
+        CODE["代码执行沙箱"]:::tool
+        API["外部 API 调用"]:::tool
+    end
+    AGENT --> MODELS
+    AGENT --> MEMORY
+    AGENT --> TOOLS
+    classDef core fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef model fill:#0ea5e9,stroke:#0284c7,color:#fff
+    classDef mem fill:#10b981,stroke:#059669,color:#fff
+    classDef tool fill:#f59e0b,stroke:#d97706,color:#fff`
     }
   };
 
-  const diagramSource = `flowchart LR
-    subgraph CLIENT["Client Layer"]
-        WEB["Web App"]:::c
-        MOB["Mobile"]:::c
-    end
-    subgraph SERVICES["Services"]
-        GW["API Gateway"]:::s
-        AUTH["Auth"]:::s
-        SVC["Business Service"]:::s
-    end
-    subgraph DATA["Data Layer"]
-        DB[(Database)]:::d
-        CACHE[(Redis)]:::d
-        MQ[Message Queue]:::d
-    end
-    CLIENT --> SERVICES
-    GW --> AUTH
-    GW --> SVC
-    SVC --> DB
-    SVC --> CACHE
-    SVC --> MQ
-    classDef c fill:#3b82f6,stroke:#1e40af,color:#fff
-    classDef s fill:#1e3a5a,stroke:#1e40af,color:#fff
-    classDef d fill:#f59e0b,stroke:#d97706,color:#fff`;
+  // ── State ──
+  let currentTheme = 'corporate';
+  let currentType  = 'app';
 
+  // ── Render ──
+  async function renderDiagram() {
+    const diag = diagrams[currentType];
+    const cfg  = themeConfigs[currentTheme];
+    const themeLabel = { corporate:'Corporate', dark:'Dark Mode', minimal:'Minimal', tech:'Tech', warm:'Warm' }[currentTheme];
+    document.getElementById('preview-title').textContent = diag.title + ' — ' + themeLabel + ' 主题';
+    document.getElementById('preview-desc').textContent  = diag.desc;
+    document.getElementById('preview-body').style.background = cfg.bgColor;
+
+    const container = document.getElementById('live-diagram');
+    container.removeAttribute('data-processed');
+    container.innerHTML = '%%{init: ' + JSON.stringify(cfg.config) + '}%%\n' + diag.source;
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', ...cfg.config });
+    try { await mermaid.run({ nodes: [container] }); } catch(e) { console.warn(e); }
+  }
+
+  // ── Theme switch ──
   async function switchTheme(pill) {
     document.querySelectorAll('.theme-pill').forEach(p => p.classList.remove('active'));
     pill.classList.add('active');
-    const themeName = pill.dataset.theme;
-    const cfg = themeConfigs[themeName];
-    document.getElementById('preview-title').textContent = cfg.label;
-    document.getElementById('preview-body').style.background = cfg.bgColor;
-
-    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', ...cfg.config });
-    const container = document.getElementById('live-diagram');
-    container.removeAttribute('data-processed');
-    container.innerHTML = `%%{init: ${JSON.stringify({...cfg.config})} }%%\n${diagramSource}`;
-    try {
-      await mermaid.run({ nodes: [container] });
-    } catch(e) { console.warn(e); }
+    currentTheme = pill.dataset.theme;
+    await renderDiagram();
   }
 
+  // ── Architecture type switch ──
+  async function switchArchType(tab) {
+    document.querySelectorAll('.arch-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentType = tab.dataset.type;
+    await renderDiagram();
+  }
+
+  // ── Install tabs ──
   function switchTab(tab, id) {
     document.querySelectorAll('.install-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.install-content').forEach(c => c.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById('tab-' + id).classList.add('active');
   }
+
+  // ── Init ──
+  mermaid.initialize({ startOnLoad: true, securityLevel: 'loose', theme: 'base',
+    themeVariables: themeConfigs.corporate.config.themeVariables
+  });
 </script>
 </body>
 </html>
