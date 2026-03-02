@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIAGRAM_TITLE</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+            /* Theme: Corporate (default) */
+            --primary-bg: #1e3a5a;
+            --primary-border: #1e40af;
+            --primary-text: #ffffff;
+            --secondary-bg: #3b82f6;
+            --secondary-border: #2563eb;
+            --surface: #ffffff;
+            --background: #f8fafc;
+            --border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark-mode"] {
+            --primary-bg: #1e293b;
+            --primary-border: #334155;
+            --primary-text: #f1f5f9;
+            --secondary-bg: #0f172a;
+            --secondary-border: #1e293b;
+            --surface: #1e293b;
+            --background: #0f172a;
+            --border: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+        }
+
+        [data-theme="minimal"] {
+            --primary-bg: #374151;
+            --primary-border: #1f2937;
+            --primary-text: #ffffff;
+            --secondary-bg: #6b7280;
+            --secondary-border: #4b5563;
+            --surface: #f9fafb;
+            --background: #ffffff;
+            --border: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+        }
+
+        [data-theme="tech"] {
+            --primary-bg: #7c3aed;
+            --primary-border: #6d28d9;
+            --primary-text: #ffffff;
+            --secondary-bg: #0ea5e9;
+            --secondary-border: #0284c7;
+            --surface: #e0f2fe;
+            --background: #f0f9ff;
+            --border: #bae6fd;
+            --text-primary: #0c4a6e;
+            --text-secondary: #0369a1;
+        }
+
+        [data-theme="warm"] {
+            --primary-bg: #92400e;
+            --primary-border: #78350f;
+            --primary-text: #fef3c7;
+            --secondary-bg: #f59e0b;
+            --secondary-border: #d97706;
+            --surface: #fef3c7;
+            --background: #fffbeb;
+            --border: #fcd34d;
+            --text-primary: #451a03;
+            --text-secondary: #92400e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .diagram-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .diagram-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Controls */
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 8px;
+            border-right: 1px solid var(--border);
+        }
+
+        .control-group:last-child {
+            border-right: none;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--background);
+            border-color: var(--secondary-bg);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-icon {
+            padding: 8px;
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            display: flex;
+            gap: 4px;
+        }
+
+        .theme-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-option.active {
+            border-color: var(--text-primary);
+        }
+
+        .theme-corporate { background: #1e3a5a; }
+        .theme-dark-mode { background: #1e293b; }
+        .theme-minimal { background: #374151; }
+        .theme-tech { background: linear-gradient(135deg, #7c3aed 0%, #0ea5e9 100%); }
+        .theme-warm { background: #92400e; }
+
+        /* Zoom Controls */
+        .zoom-display {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 48px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        /* Diagram Container */
+        .diagram-container {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            max-width: 100%;
+            overflow: auto;
+            transition: transform 0.2s ease;
+            cursor: grab;
+        }
+
+        .diagram-container.dragging {
+            cursor: grabbing;
+        }
+
+        .diagram-content {
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Mermaid Overrides */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .mermaid svg {
+            max-width: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .footer-left {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 10px;
+            background: var(--text-primary);
+            color: var(--background);
+            font-size: 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+            margin-bottom: 6px;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px 16px;
+            }
+
+            .header-left,
+            .header-right {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .main {
+                padding: 16px;
+            }
+
+            .diagram-container {
+                padding: 16px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .header,
+            .footer {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .main {
+                padding: 0;
+                overflow: visible;
+            }
+
+            .diagram-container {
+                box-shadow: none;
+                border: none;
+                padding: 20px;
+                transform: none !important;
+            }
+
+            .diagram-content {
+                transform: none !important;
+            }
+
+            .mermaid {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary-bg);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* SVG Icons */
+        .icon {
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body data-theme="corporate">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div>
+                <h1 class="diagram-title" id="diagram-title">DIAGRAM_TITLE</h1>
+                <p class="diagram-subtitle" id="diagram-subtitle">DIAGRAM_SUBTITLE</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <!-- Theme Selector -->
+            <div class="control-group">
+                <div class="theme-selector">
+                    <button class="theme-option theme-corporate active" data-theme="corporate" data-tooltip="Corporate" aria-label="Corporate theme"></button>
+                    <button class="theme-option theme-dark-mode" data-theme="dark-mode" data-tooltip="Dark Mode" aria-label="Dark mode theme"></button>
+                    <button class="theme-option theme-minimal" data-theme="minimal" data-tooltip="Minimal" aria-label="Minimal theme"></button>
+                    <button class="theme-option theme-tech" data-theme="tech" data-tooltip="Tech" aria-label="Tech theme"></button>
+                    <button class="theme-option theme-warm" data-theme="warm" data-tooltip="Warm" aria-label="Warm theme"></button>
+                </div>
+            </div>
+
+            <!-- Zoom Controls -->
+            <div class="control-group">
+                <button class="btn btn-icon tooltip" id="zoom-out" data-tooltip="Zoom out" aria-label="Zoom out">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <span class="zoom-display" id="zoom-display">100%</span>
+                <button class="btn btn-icon tooltip" id="zoom-in" data-tooltip="Zoom in" aria-label="Zoom in">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <button class="btn btn-icon tooltip" id="zoom-reset" data-tooltip="Reset view" aria-label="Reset view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.1 9.1 0 0 1 6.4 2.6L21 8"></path>
+                        <path d="M21 3v5h-5"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Actions -->
+            <div class="control-group">
+                <button class="btn tooltip" id="export-svg" data-tooltip="Export SVG" aria-label="Export SVG">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    SVG
+                </button>
+                <button class="btn tooltip" id="export-png" data-tooltip="Export PNG" aria-label="Export PNG">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    PNG
+                </button>
+                <button class="btn tooltip" id="print" data-tooltip="Print" aria-label="Print diagram">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="diagram-container" id="diagram-container">
+            <div class="diagram-content" id="diagram-content">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <span>Rendering diagram...</span>
+                </div>
+                <div class="mermaid" id="mermaid-diagram" style="display: none;">
+DIAGRAM_SOURCE
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-left">
+            <span id="footer-info">Generated with Diagram Architect</span>
+        </div>
+        <div class="footer-right">
+            <span id="theme-name">Corporate</span>
+        </div>
+    </footer>
+
+    <script>
+        // State
+        let currentTheme = 'corporate';
+        let zoom = 1;
+        let minZoom = 0.25;
+        let maxZoom = 3;
+        let isDragging = false;
+        let startX, startY, scrollLeft, scrollTop;
+        let panX = 0, panY = 0;
+
+        // DOM Elements
+        const diagramContainer = document.getElementById('diagram-container');
+        const diagramContent = document.getElementById('diagram-content');
+        const mermaidDiagram = document.getElementById('mermaid-diagram');
+        const loading = document.getElementById('loading');
+        const zoomDisplay = document.getElementById('zoom-display');
+        const themeName = document.getElementById('theme-name');
+
+        // Theme configurations
+        const themes = {
+            'corporate': {
+                mermaid: {
+                    theme: 'base',
+                    themeVariables: {
+                        primaryColor: '#1e3a5a',
+                        primaryTextColor: '#ffffff',
+                        primaryBorderColor: '#1e40af',
+                        lineColor: '#64748b',
+                        secondaryColor: '#3b82f6',
+                        tertiaryColor: '#e0e7ff',
+                        background: '#f8fafc',
+                        edgeLabelBackground: '#ffffff'
+                    }
+                }
+            },
+            'dark-mode': {
+                mermaid: {
+                    theme: 'dark',
+                    themeVariables: {
+                        primaryColor: '#1e293b',
+                        primaryTextColor: '#f1f5f9',
+                        primaryBorderColor: '#334155',
+                        lineColor: '#64748b',
+                        secondaryColor: '#0f172a',
+                        tertiaryColor: '#334155',
+                        background: '#0f172a',
+                        edgeLabelBackground: '#1e293b'
+                    }
+                }
+            },
+            'minimal': {
+                mermaid: {
+                    theme: 'base',
+                    themeVariables: {
+                        primaryColor: '#374151',
+                        primaryTextColor: '#ffffff',
+                        primaryBorderColor: '#1f2937',
+                        lineColor: '#9ca3af',
+                        secondaryColor: '#6b7280',
+                        tertiaryColor: '#f3f4f6',
+                        background: '#ffffff',
+                        edgeLabelBackground: '#ffffff'
+                    }
+                }
+            },
+            'tech': {
+                mermaid: {
+                    theme: 'base',
+                    themeVariables: {
+                        primaryColor: '#7c3aed',
+                        primaryTextColor: '#ffffff',
+                        primaryBorderColor: '#6d28d9',
+                        lineColor: '#0369a1',
+                        secondaryColor: '#0ea5e9',
+                        tertiaryColor: '#cffafe',
+                        background: '#f0f9ff',
+                        edgeLabelBackground: '#ffffff'
+                    }
+                }
+            },
+            'warm': {
+                mermaid: {
+                    theme: 'base',
+                    themeVariables: {
+                        primaryColor: '#92400e',
+                        primaryTextColor: '#fef3c7',
+                        primaryBorderColor: '#78350f',
+                        lineColor: '#b45309',
+                        secondaryColor: '#f59e0b',
+                        tertiaryColor: '#fef3c7',
+                        background: '#fffbeb',
+                        edgeLabelBackground: '#fef3c7'
+                    }
+                }
+            }
+        };
+
+        // Initialize Mermaid
+        function initializeMermaid() {
+            mermaid.initialize({
+                startOnLoad: true,
+                securityLevel: 'loose',
+                ...themes[currentTheme].mermaid
+            });
+        }
+
+        // Render diagram
+        async function renderDiagram() {
+            try {
+                await mermaid.run({
+                    nodes: [mermaidDiagram]
+                });
+                loading.style.display = 'none';
+                mermaidDiagram.style.display = 'flex';
+            } catch (error) {
+                loading.innerHTML = `<span style="color: #ef4444;">Error rendering diagram: ${error.message}</span>`;
+            }
+        }
+
+        // Theme switching
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.setAttribute('data-theme', theme);
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+            themeName.textContent = theme.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            initializeMermaid();
+            // Re-render with new theme
+            mermaidDiagram.removeAttribute('data-processed');
+            mermaidDiagram.style.display = 'none';
+            loading.style.display = 'flex';
+            loading.innerHTML = '<div class="spinner"></div><span>Rendering diagram...</span>';
+            renderDiagram();
+        }
+
+        // Zoom functions
+        function updateZoom() {
+            diagramContent.style.transform = `scale(${zoom})`;
+            zoomDisplay.textContent = `${Math.round(zoom * 100)}%`;
+        }
+
+        function zoomIn() {
+            zoom = Math.min(maxZoom, zoom + 0.25);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            zoom = Math.max(minZoom, zoom - 0.25);
+            updateZoom();
+        }
+
+        function resetZoom() {
+            zoom = 1;
+            panX = 0;
+            panY = 0;
+            diagramContainer.scrollLeft = 0;
+            diagramContainer.scrollTop = 0;
+            updateZoom();
+        }
+
+        // Drag to pan
+        function startDrag(e) {
+            if (e.target.closest('button')) return;
+            isDragging = true;
+            diagramContainer.classList.add('dragging');
+            startX = e.pageX - diagramContainer.offsetLeft;
+            startY = e.pageY - diagramContainer.offsetTop;
+            scrollLeft = diagramContainer.scrollLeft;
+            scrollTop = diagramContainer.scrollTop;
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - diagramContainer.offsetLeft;
+            const y = e.pageY - diagramContainer.offsetTop;
+            diagramContainer.scrollLeft = scrollLeft - (x - startX);
+            diagramContainer.scrollTop = scrollTop - (y - startY);
+        }
+
+        function endDrag() {
+            isDragging = false;
+            diagramContainer.classList.remove('dragging');
+        }
+
+        // Export functions
+        function exportSVG() {
+            const svg = mermaidDiagram.querySelector('svg');
+            if (!svg) return;
+
+            const serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(svg);
+
+            // Add XML declaration
+            svgString = '<?xml version="1.0" standalone="no"?>\n' + svgString;
+
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = (document.getElementById('diagram-title').textContent || 'diagram') + '.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportPNG() {
+            const svg = mermaidDiagram.querySelector('svg');
+            if (!svg) return;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const img = new Image();
+
+            img.onload = function() {
+                canvas.width = img.width * 2; // 2x for retina
+                canvas.height = img.height * 2;
+                ctx.scale(2, 2);
+                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--background');
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+
+                const link = document.createElement('a');
+                link.download = (document.getElementById('diagram-title').textContent || 'diagram') + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            };
+
+            img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+        }
+
+        function printDiagram() {
+            window.print();
+        }
+
+        // Event listeners
+        document.querySelectorAll('.theme-option').forEach(btn => {
+            btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+        });
+
+        document.getElementById('zoom-in').addEventListener('click', zoomIn);
+        document.getElementById('zoom-out').addEventListener('click', zoomOut);
+        document.getElementById('zoom-reset').addEventListener('click', resetZoom);
+        document.getElementById('export-svg').addEventListener('click', exportSVG);
+        document.getElementById('export-png').addEventListener('click', exportPNG);
+        document.getElementById('print').addEventListener('click', printDiagram);
+
+        // Mouse wheel zoom
+        diagramContainer.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                zoom = Math.min(maxZoom, Math.max(minZoom, zoom + delta));
+                updateZoom();
+            }
+        });
+
+        // Drag events (mouse)
+        diagramContainer.addEventListener('mousedown', startDrag);
+        diagramContainer.addEventListener('mousemove', drag);
+        diagramContainer.addEventListener('mouseup', endDrag);
+        diagramContainer.addEventListener('mouseleave', endDrag);
+
+        // Drag events (touch)
+        diagramContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                isDragging = true;
+                diagramContainer.classList.add('dragging');
+                startX = touch.pageX - diagramContainer.offsetLeft;
+                startY = touch.pageY - diagramContainer.offsetTop;
+                scrollLeft = diagramContainer.scrollLeft;
+                scrollTop = diagramContainer.scrollTop;
+            }
+        }, { passive: true });
+        diagramContainer.addEventListener('touchmove', (e) => {
+            if (!isDragging || e.touches.length !== 1) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const x = touch.pageX - diagramContainer.offsetLeft;
+            const y = touch.pageY - diagramContainer.offsetTop;
+            diagramContainer.scrollLeft = scrollLeft - (x - startX);
+            diagramContainer.scrollTop = scrollTop - (y - startY);
+        }, { passive: false });
+        diagramContainer.addEventListener('touchend', endDrag);
+        diagramContainer.addEventListener('touchcancel', endDrag);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '+':
+                    case '=':
+                        e.preventDefault();
+                        zoomIn();
+                        break;
+                    case '-':
+                        e.preventDefault();
+                        zoomOut();
+                        break;
+                    case '0':
+                        e.preventDefault();
+                        resetZoom();
+                        break;
+                    case 'p':
+                        e.preventDefault();
+                        printDiagram();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        initializeMermaid();
+        renderDiagram();
+    </script>
+</body>
+</html>
