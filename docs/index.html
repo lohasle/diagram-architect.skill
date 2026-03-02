@@ -44,6 +44,13 @@
     .nav-links { display: flex; gap: 24px; }
     .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .15s; }
     .nav-links a:hover { color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .lang-toggle {
+      background: var(--surface); color: var(--text-muted); border: 1px solid var(--border);
+      padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all .15s; letter-spacing: .5px;
+    }
+    .lang-toggle:hover { border-color: var(--accent); color: var(--text); }
     .nav-btn {
       background: var(--accent); color: #fff; border: none;
       padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
@@ -245,36 +252,39 @@
 <nav>
   <div class="nav-logo">diagram<span>-architect</span></div>
   <div class="nav-links">
-    <a href="#features">Features</a>
-    <a href="#themes">Themes</a>
-    <a href="#install">Install</a>
-    <a href="#usage">Usage</a>
+    <a href="#features" data-i18n="nav.features">Features</a>
+    <a href="#themes" data-i18n="nav.themes">Demo</a>
+    <a href="#install" data-i18n="nav.install">Install</a>
+    <a href="#usage" data-i18n="nav.usage">Usage</a>
     <a href="https://github.com/lohasle/diagram-architect.skill">GitHub</a>
   </div>
-  <a class="nav-btn" href="#install">Install Skill</a>
+  <div class="nav-right">
+    <button class="lang-toggle" id="lang-toggle" onclick="toggleLang()">中文</button>
+    <a class="nav-btn" href="#install" data-i18n="nav.install-btn">Install Skill</a>
+  </div>
 </nav>
 
 <!-- Hero -->
 <section class="hero">
   <div class="container">
-    <div class="hero-badge">Claude Code Skill</div>
-    <h1>Draw diagrams by<br><span>describing them</span></h1>
-    <p class="hero-desc">Production-grade architecture diagrams, flowcharts, and sequence diagrams — beautiful HTML output with professional themes and interactive controls.</p>
+    <div class="hero-badge" data-i18n="hero.badge">Claude Code Skill</div>
+    <h1 data-i18n-html="hero.h1">Draw diagrams by<br><span>describing them</span></h1>
+    <p class="hero-desc" data-i18n="hero.desc">Production-grade architecture diagrams, flowcharts, and sequence diagrams — beautiful HTML output with professional themes and interactive controls.</p>
     <div class="hero-actions">
       <a class="btn-primary" href="#install">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Install Now
+        <span data-i18n="hero.cta-primary">Install Now</span>
       </a>
       <a class="btn-outline" href="https://github.com/lohasle/diagram-architect.skill">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        View on GitHub
+        <span data-i18n="hero.cta-outline">View on GitHub</span>
       </a>
     </div>
     <div class="stats">
-      <div class="stat"><div class="stat-num" style="color:#a78bfa">8+</div><div class="stat-label">Diagram Types</div></div>
-      <div class="stat"><div class="stat-num" style="color:#38bdf8">5</div><div class="stat-label">Professional Themes</div></div>
-      <div class="stat"><div class="stat-num" style="color:#34d399">0</div><div class="stat-label">Runtime Dependencies</div></div>
-      <div class="stat"><div class="stat-num" style="color:#f59e0b">3</div><div class="stat-label">Rendering Engines</div></div>
+      <div class="stat"><div class="stat-num" style="color:#a78bfa">8+</div><div class="stat-label" data-i18n="stat.diagram-types">Diagram Types</div></div>
+      <div class="stat"><div class="stat-num" style="color:#38bdf8">5</div><div class="stat-label" data-i18n="stat.themes">Professional Themes</div></div>
+      <div class="stat"><div class="stat-num" style="color:#34d399">0</div><div class="stat-label" data-i18n="stat.deps">Runtime Dependencies</div></div>
+      <div class="stat"><div class="stat-num" style="color:#f59e0b">3</div><div class="stat-label" data-i18n="stat.engines">Rendering Engines</div></div>
     </div>
   </div>
 </section>
@@ -283,40 +293,40 @@
 <section id="features">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">Features</div>
-      <h2>Everything in one HTML file</h2>
-      <p class="section-desc">Every generated diagram is a single, self-contained HTML file — open it, share it, no server needed.</p>
+      <div class="section-label" data-i18n="features.label">Features</div>
+      <h2 data-i18n="features.h2">Everything in one HTML file</h2>
+      <p class="section-desc" data-i18n="features.desc">Every generated diagram is a single, self-contained HTML file — open it, share it, no server needed.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon" style="background:rgba(124,58,237,.15)">🎨</div>
-        <h3>5 Professional Themes</h3>
-        <p>Corporate navy, Dark Mode slate, Minimal grayscale, Tech purple-cyan, Warm amber — switchable at runtime without re-generating.</p>
+        <h3 data-i18n="feature.themes.title">5 Professional Themes</h3>
+        <p data-i18n="feature.themes.desc">Corporate navy, Dark Mode slate, Minimal grayscale, Tech purple-cyan, Warm amber — switchable at runtime without re-generating.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon" style="background:rgba(14,165,233,.15)">🔍</div>
-        <h3>Interactive Controls</h3>
-        <p>Zoom 25%–300% with mouse wheel or buttons, drag to pan, keyboard shortcuts. Works on desktop and mobile touch.</p>
+        <h3 data-i18n="feature.controls.title">Interactive Controls</h3>
+        <p data-i18n="feature.controls.desc">Zoom 25%–300% with mouse wheel or buttons, drag to pan, keyboard shortcuts. Works on desktop and mobile touch.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon" style="background:rgba(16,185,129,.15)">📤</div>
-        <h3>Export SVG &amp; PNG</h3>
-        <p>Export as vector SVG for infinite scaling or 2× retina PNG for presentations. One click, no plugins.</p>
+        <h3 data-i18n="feature.export.title">Export SVG &amp; PNG</h3>
+        <p data-i18n="feature.export.desc">Export as vector SVG for infinite scaling or 2× retina PNG for presentations. One click, no plugins.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon" style="background:rgba(245,158,11,.15)">⚡</div>
-        <h3>Zero Dependencies</h3>
-        <p>Mermaid.js is loaded via CDN — no npm install, no CLI tools, no build step. The HTML file works offline after first load.</p>
+        <h3 data-i18n="feature.deps.title">Zero Dependencies</h3>
+        <p data-i18n="feature.deps.desc">Mermaid.js is loaded via CDN — no npm install, no CLI tools, no build step. The HTML file works offline after first load.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon" style="background:rgba(239,68,68,.15)">🏗️</div>
-        <h3>8+ Diagram Types</h3>
-        <p>Flowchart, Sequence, ER, State, Class, Mind Map, Gantt, C4 Architecture — all from plain text descriptions.</p>
+        <h3 data-i18n="feature.types.title">8+ Diagram Types</h3>
+        <p data-i18n="feature.types.desc">Flowchart, Sequence, ER, State, Class, Mind Map, Gantt, C4 Architecture — all from plain text descriptions.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon" style="background:rgba(168,85,247,.15)">🖨️</div>
-        <h3>Print Ready</h3>
-        <p>Print-optimized CSS hides controls, removes backgrounds, and ensures clean output for documentation and slides.</p>
+        <h3 data-i18n="feature.print.title">Print Ready</h3>
+        <p data-i18n="feature.print.desc">Print-optimized CSS hides controls, removes backgrounds, and ensures clean output for documentation and slides.</p>
       </div>
     </div>
   </div>
@@ -326,17 +336,17 @@
 <section id="themes" style="background: linear-gradient(180deg, transparent, rgba(124,58,237,.05), transparent);">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">实时演示 · Live Demo</div>
-      <h2>AI 架构图四大维度</h2>
-      <p class="section-desc">点击架构类型切换图表，点击色块切换主题——实时渲染，零延迟。</p>
+      <div class="section-label" data-i18n="demo.label">Live Demo</div>
+      <h2 data-i18n="demo.h2">4 AI Architecture Dimensions</h2>
+      <p class="section-desc" data-i18n="demo.desc">Click to switch architecture type, click theme pills to change themes — live render, zero delay.</p>
     </div>
 
     <!-- Architecture type tabs -->
     <div class="arch-tabs">
-      <button class="arch-tab active" data-type="app" onclick="switchArchType(this)">应用架构</button>
-      <button class="arch-tab" data-type="data" onclick="switchArchType(this)">数据架构</button>
-      <button class="arch-tab" data-type="deploy" onclick="switchArchType(this)">部署架构</button>
-      <button class="arch-tab" data-type="module" onclick="switchArchType(this)">模块架构</button>
+      <button class="arch-tab active" data-type="app" data-i18n="arch.app" onclick="switchArchType(this)">Application Architecture</button>
+      <button class="arch-tab" data-type="data" data-i18n="arch.data" onclick="switchArchType(this)">Data Architecture</button>
+      <button class="arch-tab" data-type="deploy" data-i18n="arch.deploy" onclick="switchArchType(this)">Deployment Architecture</button>
+      <button class="arch-tab" data-type="module" data-i18n="arch.module" onclick="switchArchType(this)">Module Architecture</button>
     </div>
 
     <!-- Theme switcher -->
@@ -363,7 +373,7 @@
         <div class="preview-dot" style="background:#ef4444"></div>
         <div class="preview-dot" style="background:#f59e0b"></div>
         <div class="preview-dot" style="background:#10b981"></div>
-        <span class="preview-title" id="preview-title">AI 应用架构 — Corporate 主题</span>
+        <span class="preview-title" id="preview-title">AI Application Architecture — Corporate theme</span>
       </div>
       <div class="preview-body" id="preview-body">
         <div class="mermaid" id="live-diagram">
@@ -405,7 +415,7 @@ flowchart LR
         </div>
       </div>
     </div>
-    <p class="preview-desc" id="preview-desc">RAG 问答平台 — 从客户端到 LLM 服务的完整分层架构</p>
+    <p class="preview-desc" id="preview-desc">RAG Q&amp;A Platform — complete layered architecture from client to LLM service</p>
   </div>
 </section>
 
@@ -413,18 +423,18 @@ flowchart LR
 <section id="install">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">Installation</div>
-      <h2>Get started in 30 seconds</h2>
-      <p class="section-desc">Two ways to install — pick whichever fits your workflow.</p>
+      <div class="section-label" data-i18n="install.label">Installation</div>
+      <h2 data-i18n="install.h2">Get started in 30 seconds</h2>
+      <p class="section-desc" data-i18n="install.desc">Two ways to install — pick whichever fits your workflow.</p>
     </div>
     <div class="install-section">
       <div class="install-tabs">
-        <button class="install-tab active" onclick="switchTab(this, 'skill-file')">Install .skill file</button>
-        <button class="install-tab" onclick="switchTab(this, 'git-clone')">Clone from Git</button>
-        <button class="install-tab" onclick="switchTab(this, 'verify')">Verify</button>
+        <button class="install-tab active" data-i18n="install.tab.skill" onclick="switchTab(this, 'skill-file')">Install .skill file</button>
+        <button class="install-tab" data-i18n="install.tab.git" onclick="switchTab(this, 'git-clone')">Clone from Git</button>
+        <button class="install-tab" data-i18n="install.tab.verify" onclick="switchTab(this, 'verify')">Verify</button>
       </div>
       <div id="tab-skill-file" class="install-content active">
-        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">Download and place the packaged <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">.skill</code> file in your skills directory:</p>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;" data-i18n-html="install.skill.desc">Download and place the packaged <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">.skill</code> file in your skills directory:</p>
         <pre><span class="comment"># 1. Download the latest release</span>
 <span class="cmd">curl</span> -L https://github.com/lohasle/diagram-architect.skill/releases/latest/download/diagram-architect.skill \
   -o ~/.claude/skills/diagram-architect.skill
@@ -433,7 +443,7 @@ flowchart LR
 <span class="comment"># No further configuration needed</span></pre>
       </div>
       <div id="tab-git-clone" class="install-content">
-        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">Clone the source directly into your skills directory:</p>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;" data-i18n="install.git.desc">Clone the source directly into your skills directory:</p>
         <pre><span class="comment"># Clone into skills directory as 'diagram-architect'</span>
 <span class="cmd">git clone</span> <span class="str">https://github.com/lohasle/diagram-architect.skill.git</span> \
   ~/.claude/skills/diagram-architect
@@ -442,14 +452,14 @@ flowchart LR
 <span class="cmd">cd</span> ~/.claude/skills/diagram-architect &amp;&amp; <span class="cmd">git pull</span></pre>
       </div>
       <div id="tab-verify" class="install-content">
-        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">Confirm the skill is installed:</p>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;" data-i18n="install.verify.desc">Confirm the skill is installed:</p>
         <pre><span class="comment"># Check the skills directory</span>
 <span class="cmd">ls</span> ~/.claude/skills/
 <span class="comment"># → diagram-architect/  (or diagram-architect.skill)</span>
 
 <span class="comment"># In Claude Code, type /skills to see active skills</span>
 <span class="comment"># diagram-architect should appear in the list</span></pre>
-        <p style="color:var(--text-muted);font-size:14px;margin-top:16px;">For D2/PlantUML rendering via <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">render.py</code>:</p>
+        <p style="color:var(--text-muted);font-size:14px;margin-top:16px;" data-i18n-html="install.verify.desc2">For D2/PlantUML rendering via <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">render.py</code>:</p>
         <pre><span class="cmd">pip install</span> requests</pre>
       </div>
     </div>
@@ -460,48 +470,48 @@ flowchart LR
 <section id="usage">
   <div class="container">
     <div class="section-header">
-      <div class="section-label">Usage</div>
-      <h2>Just describe what you need</h2>
-      <p class="section-desc">No syntax to learn. Claude generates the diagram code, picks the best theme, and writes the HTML file.</p>
+      <div class="section-label" data-i18n="usage.label">Usage</div>
+      <h2 data-i18n="usage.h2">Just describe what you need</h2>
+      <p class="section-desc" data-i18n="usage.desc">No syntax to learn. Claude generates the diagram code, picks the best theme, and writes the HTML file.</p>
     </div>
     <div class="usage-grid">
       <div class="usage-card">
-        <h3>AI 架构示例 Prompts</h3>
+        <h3 data-i18n="usage.prompts.title">Example Prompts</h3>
         <div class="usage-examples">
           <div class="example-item">
-            <span class="example-tag">应用架构</span>
-            "画一个 RAG 问答平台的应用架构图，使用 Tech 主题"
+            <span class="example-tag" data-i18n="usage.tag.app">Application</span>
+            <span data-i18n="usage.ex.app">"Draw an application architecture for a RAG Q&amp;A platform, using Tech theme"</span>
           </div>
           <div class="example-item">
-            <span class="example-tag">数据架构</span>
-            "生成 AI 知识库系统的数据处理流水线架构图"
+            <span class="example-tag" data-i18n="usage.tag.data">Data</span>
+            <span data-i18n="usage.ex.data">"Generate a data processing pipeline architecture for an AI knowledge base"</span>
           </div>
           <div class="example-item">
-            <span class="example-tag">部署架构</span>
-            "画出生产环境 AI 推理服务的部署架构，包含 GPU 集群和监控"
+            <span class="example-tag" data-i18n="usage.tag.deploy">Deployment</span>
+            <span data-i18n="usage.ex.deploy">"Draw production AI inference deployment architecture with GPU cluster and monitoring"</span>
           </div>
           <div class="example-item">
-            <span class="example-tag">模块架构</span>
-            "绘制 AI Agent 框架的模块架构图，使用 Dark Mode 主题"
+            <span class="example-tag" data-i18n="usage.tag.module">Module</span>
+            <span data-i18n="usage.ex.module">"Draw an AI Agent framework module architecture using Dark Mode theme"</span>
           </div>
           <div class="example-item">
-            <span class="example-tag">时序图</span>
-            "画用户与 LLM 服务交互的时序图，包含 RAG 检索过程"
+            <span class="example-tag" data-i18n="usage.tag.seq">Sequence</span>
+            <span data-i18n="usage.ex.seq">"Draw a sequence diagram for user interactions with LLM service including RAG retrieval"</span>
           </div>
         </div>
       </div>
       <div class="usage-card">
-        <h3>Keyboard Shortcuts</h3>
-        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px;">In the generated HTML file:</p>
+        <h3 data-i18n="usage.kb.title">Keyboard Shortcuts</h3>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px;" data-i18n="usage.kb.subtitle">In the generated HTML file:</p>
         <div class="keyboard-grid">
-          <div class="kb-row"><span class="kb-label">Zoom in</span><kbd class="kb-key">Ctrl +</kbd></div>
-          <div class="kb-row"><span class="kb-label">Zoom out</span><kbd class="kb-key">Ctrl −</kbd></div>
-          <div class="kb-row"><span class="kb-label">Reset view</span><kbd class="kb-key">Ctrl 0</kbd></div>
-          <div class="kb-row"><span class="kb-label">Print</span><kbd class="kb-key">Ctrl P</kbd></div>
+          <div class="kb-row"><span class="kb-label" data-i18n="usage.kb.zoomin">Zoom in</span><kbd class="kb-key">Ctrl +</kbd></div>
+          <div class="kb-row"><span class="kb-label" data-i18n="usage.kb.zoomout">Zoom out</span><kbd class="kb-key">Ctrl −</kbd></div>
+          <div class="kb-row"><span class="kb-label" data-i18n="usage.kb.reset">Reset view</span><kbd class="kb-key">Ctrl 0</kbd></div>
+          <div class="kb-row"><span class="kb-label" data-i18n="usage.kb.print">Print</span><kbd class="kb-key">Ctrl P</kbd></div>
         </div>
         <div style="margin-top:24px">
-          <h3>Output File</h3>
-          <p style="color:var(--text-muted);font-size:13px;margin-top:8px">Claude writes a <code style="font-family:var(--mono);background:var(--surface2);padding:2px 5px;border-radius:4px">.html</code> file in the current directory. Open it in any browser — no server required.</p>
+          <h3 data-i18n="usage.output.title">Output File</h3>
+          <p style="color:var(--text-muted);font-size:13px;margin-top:8px" data-i18n-html="usage.output.desc">Claude writes a <code style="font-family:var(--mono);background:var(--surface2);padding:2px 5px;border-radius:4px">.html</code> file in the current directory. Open it in any browser — no server required.</p>
         </div>
       </div>
     </div>
@@ -512,36 +522,36 @@ flowchart LR
 <section>
   <div class="container">
     <div class="section-header">
-      <div class="section-label">Engines</div>
-      <h2>Right engine for every diagram</h2>
-      <p class="section-desc">Claude automatically selects the best rendering engine based on your diagram type.</p>
+      <div class="section-label" data-i18n="engines.label">Engines</div>
+      <h2 data-i18n="engines.h2">Right engine for every diagram</h2>
+      <p class="section-desc" data-i18n="engines.desc">Claude automatically selects the best rendering engine based on your diagram type.</p>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
       <table class="engine-table">
         <thead>
           <tr>
-            <th>Engine</th>
-            <th>Best For</th>
-            <th>Method</th>
-            <th>Dependency</th>
+            <th data-i18n="engines.th.engine">Engine</th>
+            <th data-i18n="engines.th.best">Best For</th>
+            <th data-i18n="engines.th.method">Method</th>
+            <th data-i18n="engines.th.dep">Dependency</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><strong>Mermaid.js</strong></td>
-            <td>Flowcharts, Sequence, ER, State, Class, Gantt, Mind Map</td>
+            <td data-i18n="engines.mermaid.best">Flowcharts, Sequence, ER, State, Class, Gantt, Mind Map</td>
             <td><span class="badge badge-green">CDN</span></td>
-            <td style="color:var(--text-muted)">None</td>
+            <td style="color:var(--text-muted)" data-i18n="engines.dep.none">None</td>
           </tr>
           <tr>
             <td><strong>D2</strong></td>
-            <td>Infrastructure, cloud deployment, network topology</td>
+            <td data-i18n="engines.d2.best">Infrastructure, cloud deployment, network topology</td>
             <td><span class="badge badge-blue">kroki.io API</span></td>
             <td style="color:var(--text-muted)">pip install requests</td>
           </tr>
           <tr>
             <td><strong>PlantUML</strong></td>
-            <td>C4 Architecture (Context, Container, Component)</td>
+            <td data-i18n="engines.plantuml.best">C4 Architecture (Context, Container, Component)</td>
             <td><span class="badge badge-purple">kroki.io API</span></td>
             <td style="color:var(--text-muted)">pip install requests</td>
           </tr>
@@ -554,11 +564,11 @@ flowchart LR
 <!-- CTA -->
 <section class="cta">
   <div class="container">
-    <h2>Start drawing in seconds</h2>
-    <p>Install the skill and turn text descriptions into production-ready diagrams.</p>
+    <h2 data-i18n="cta.h2">Start drawing in seconds</h2>
+    <p data-i18n="cta.desc">Install the skill and turn text descriptions into production-ready diagrams.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a class="btn-primary" href="https://github.com/lohasle/diagram-architect.skill">View on GitHub</a>
-      <a class="btn-outline" href="#install">Installation Guide</a>
+      <a class="btn-primary" href="https://github.com/lohasle/diagram-architect.skill" data-i18n="cta.github">View on GitHub</a>
+      <a class="btn-outline" href="#install" data-i18n="cta.install">Installation Guide</a>
     </div>
   </div>
 </section>
@@ -566,7 +576,7 @@ flowchart LR
 <!-- Footer -->
 <footer>
   <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-    <span>Built for <a href="https://claude.ai/code">Claude Code</a> · MIT License</span>
+    <span data-i18n-html="footer.built">Built for <a href="https://claude.ai/code">Claude Code</a> · MIT License</span>
     <div class="footer-links">
       <a href="https://github.com/lohasle/diagram-architect.skill">GitHub</a>
       <a href="https://mermaid.js.org">Mermaid.js</a>
@@ -577,6 +587,236 @@ flowchart LR
 </footer>
 
 <script>
+  // ── i18n Translations ──
+  const T = {
+    en: {
+      'nav.features': 'Features',
+      'nav.themes': 'Demo',
+      'nav.install': 'Install',
+      'nav.usage': 'Usage',
+      'nav.install-btn': 'Install Skill',
+      'hero.badge': 'Claude Code Skill',
+      'hero.h1': 'Draw diagrams by<br><span>describing them</span>',
+      'hero.desc': 'Production-grade architecture diagrams, flowcharts, and sequence diagrams — beautiful HTML output with professional themes and interactive controls.',
+      'hero.cta-primary': 'Install Now',
+      'hero.cta-outline': 'View on GitHub',
+      'stat.diagram-types': 'Diagram Types',
+      'stat.themes': 'Professional Themes',
+      'stat.deps': 'Runtime Dependencies',
+      'stat.engines': 'Rendering Engines',
+      'features.label': 'Features',
+      'features.h2': 'Everything in one HTML file',
+      'features.desc': 'Every generated diagram is a single, self-contained HTML file — open it, share it, no server needed.',
+      'feature.themes.title': '5 Professional Themes',
+      'feature.themes.desc': 'Corporate navy, Dark Mode slate, Minimal grayscale, Tech purple-cyan, Warm amber — switchable at runtime without re-generating.',
+      'feature.controls.title': 'Interactive Controls',
+      'feature.controls.desc': 'Zoom 25%–300% with mouse wheel or buttons, drag to pan, keyboard shortcuts. Works on desktop and mobile touch.',
+      'feature.export.title': 'Export SVG & PNG',
+      'feature.export.desc': 'Export as vector SVG for infinite scaling or 2× retina PNG for presentations. One click, no plugins.',
+      'feature.deps.title': 'Zero Dependencies',
+      'feature.deps.desc': 'Mermaid.js is loaded via CDN — no npm install, no CLI tools, no build step. The HTML file works offline after first load.',
+      'feature.types.title': '8+ Diagram Types',
+      'feature.types.desc': 'Flowchart, Sequence, ER, State, Class, Mind Map, Gantt, C4 Architecture — all from plain text descriptions.',
+      'feature.print.title': 'Print Ready',
+      'feature.print.desc': 'Print-optimized CSS hides controls, removes backgrounds, and ensures clean output for documentation and slides.',
+      'demo.label': 'Live Demo',
+      'demo.h2': '4 AI Architecture Dimensions',
+      'demo.desc': 'Click to switch architecture type, click theme pills to change themes — live render, zero delay.',
+      'arch.app': 'Application Architecture',
+      'arch.data': 'Data Architecture',
+      'arch.deploy': 'Deployment Architecture',
+      'arch.module': 'Module Architecture',
+      'diag.app.title': 'AI Application Architecture',
+      'diag.app.desc': 'RAG Q&A Platform — complete layered architecture from client to LLM service',
+      'diag.data.title': 'AI Data Architecture',
+      'diag.data.desc': 'AI Knowledge Base Pipeline — end-to-end from ingestion to RAG retrieval and generation',
+      'diag.deploy.title': 'AI Deployment Architecture',
+      'diag.deploy.desc': 'Production GPU inference cluster — edge, compute, and operations layers',
+      'diag.module.title': 'AI Module Architecture',
+      'diag.module.desc': 'AI Agent Framework — Core, Models, Memory, and Tools four-layer modules',
+      'install.label': 'Installation',
+      'install.h2': 'Get started in 30 seconds',
+      'install.desc': 'Two ways to install — pick whichever fits your workflow.',
+      'install.tab.skill': 'Install .skill file',
+      'install.tab.git': 'Clone from Git',
+      'install.tab.verify': 'Verify',
+      'install.skill.desc': 'Download and place the packaged <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">.skill</code> file in your skills directory:',
+      'install.git.desc': 'Clone the source directly into your skills directory:',
+      'install.verify.desc': 'Confirm the skill is installed:',
+      'install.verify.desc2': 'For D2/PlantUML rendering via <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">render.py</code>:',
+      'usage.label': 'Usage',
+      'usage.h2': 'Just describe what you need',
+      'usage.desc': 'No syntax to learn. Claude generates the diagram code, picks the best theme, and writes the HTML file.',
+      'usage.prompts.title': 'Example Prompts',
+      'usage.tag.app': 'Application',
+      'usage.tag.data': 'Data',
+      'usage.tag.deploy': 'Deployment',
+      'usage.tag.module': 'Module',
+      'usage.tag.seq': 'Sequence',
+      'usage.ex.app': '"Draw an application architecture for a RAG Q&A platform, using Tech theme"',
+      'usage.ex.data': '"Generate a data processing pipeline architecture for an AI knowledge base"',
+      'usage.ex.deploy': '"Draw production AI inference deployment architecture with GPU cluster and monitoring"',
+      'usage.ex.module': '"Draw an AI Agent framework module architecture using Dark Mode theme"',
+      'usage.ex.seq': '"Draw a sequence diagram for user interactions with LLM service including RAG retrieval"',
+      'usage.kb.title': 'Keyboard Shortcuts',
+      'usage.kb.subtitle': 'In the generated HTML file:',
+      'usage.kb.zoomin': 'Zoom in',
+      'usage.kb.zoomout': 'Zoom out',
+      'usage.kb.reset': 'Reset view',
+      'usage.kb.print': 'Print',
+      'usage.output.title': 'Output File',
+      'usage.output.desc': 'Claude writes a <code style="font-family:var(--mono);background:var(--surface2);padding:2px 5px;border-radius:4px">.html</code> file in the current directory. Open it in any browser — no server required.',
+      'engines.label': 'Engines',
+      'engines.h2': 'Right engine for every diagram',
+      'engines.desc': 'Claude automatically selects the best rendering engine based on your diagram type.',
+      'engines.th.engine': 'Engine',
+      'engines.th.best': 'Best For',
+      'engines.th.method': 'Method',
+      'engines.th.dep': 'Dependency',
+      'engines.mermaid.best': 'Flowcharts, Sequence, ER, State, Class, Gantt, Mind Map',
+      'engines.d2.best': 'Infrastructure, cloud deployment, network topology',
+      'engines.plantuml.best': 'C4 Architecture (Context, Container, Component)',
+      'engines.dep.none': 'None',
+      'cta.h2': 'Start drawing in seconds',
+      'cta.desc': 'Install the skill and turn text descriptions into production-ready diagrams.',
+      'cta.github': 'View on GitHub',
+      'cta.install': 'Installation Guide',
+      'footer.built': 'Built for <a href="https://claude.ai/code">Claude Code</a> · MIT License',
+      'theme.suffix': ' theme'
+    },
+    zh: {
+      'nav.features': '特性',
+      'nav.themes': '演示',
+      'nav.install': '安装',
+      'nav.usage': '使用',
+      'nav.install-btn': '立即安装',
+      'hero.badge': 'Claude Code 技能',
+      'hero.h1': '用自然语言<br><span>描述即可生成图表</span>',
+      'hero.desc': '生产级架构图、流程图和时序图——精美 HTML 输出，内置专业主题与交互控件。',
+      'hero.cta-primary': '立即安装',
+      'hero.cta-outline': '查看 GitHub',
+      'stat.diagram-types': '图表类型',
+      'stat.themes': '专业主题',
+      'stat.deps': '运行时依赖',
+      'stat.engines': '渲染引擎',
+      'features.label': '功能特性',
+      'features.h2': '一切封装在单个 HTML 文件',
+      'features.desc': '每张生成的图表都是独立自包含的 HTML 文件——打开即用，无需服务器。',
+      'feature.themes.title': '5 套专业主题',
+      'feature.themes.desc': 'Corporate 藏青、Dark Mode 深灰、Minimal 极简、Tech 紫青、Warm 琥珀——运行时切换，无需重新生成。',
+      'feature.controls.title': '交互式控件',
+      'feature.controls.desc': '鼠标滚轮或按钮缩放 25%–300%，拖拽平移，键盘快捷键。支持桌面与移动触控。',
+      'feature.export.title': '导出 SVG & PNG',
+      'feature.export.desc': '导出矢量 SVG（无限缩放）或 2× Retina PNG（适合演示）。一键操作，无需插件。',
+      'feature.deps.title': '零运行时依赖',
+      'feature.deps.desc': 'Mermaid.js 通过 CDN 加载——无需 npm、无需 CLI、无需构建步骤。首次加载后可离线使用。',
+      'feature.types.title': '8+ 图表类型',
+      'feature.types.desc': '流程图、时序图、ER 图、状态图、类图、思维导图、甘特图、C4 架构图——全从纯文本生成。',
+      'feature.print.title': '打印优化',
+      'feature.print.desc': '打印优化 CSS 自动隐藏控件、移除背景色，确保文档和幻灯片输出整洁。',
+      'demo.label': '实时演示',
+      'demo.h2': 'AI 架构图四大维度',
+      'demo.desc': '点击架构类型切换图表，点击色块切换主题——实时渲染，零延迟。',
+      'arch.app': '应用架构',
+      'arch.data': '数据架构',
+      'arch.deploy': '部署架构',
+      'arch.module': '模块架构',
+      'diag.app.title': 'AI 应用架构',
+      'diag.app.desc': 'RAG 问答平台 — 从客户端到 LLM 服务的完整分层架构',
+      'diag.data.title': 'AI 数据架构',
+      'diag.data.desc': 'AI 知识库数据流水线 — 从采集到 RAG 检索生成的全链路',
+      'diag.deploy.title': 'AI 部署架构',
+      'diag.deploy.desc': '生产级 GPU 推理集群完整部署拓扑 — 含边缘层、计算层与运维层',
+      'diag.module.title': 'AI 模块架构',
+      'diag.module.desc': 'AI Agent 框架 — 核心、模型、记忆、工具四层模块组成',
+      'install.label': '安装方法',
+      'install.h2': '30 秒完成安装',
+      'install.desc': '两种安装方式——选择适合你工作流的方式。',
+      'install.tab.skill': '安装 .skill 文件',
+      'install.tab.git': 'Git 克隆',
+      'install.tab.verify': '验证安装',
+      'install.skill.desc': '下载打包好的 <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">.skill</code> 文件，放入技能目录：',
+      'install.git.desc': '将源码直接克隆到技能目录：',
+      'install.verify.desc': '确认技能已正确安装：',
+      'install.verify.desc2': '如需 D2/PlantUML 渲染（通过 <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px">render.py</code>）：',
+      'usage.label': '使用方法',
+      'usage.h2': '描述需求即可',
+      'usage.desc': '无需学习语法。Claude 自动生成图表代码、选择最佳主题并写入 HTML 文件。',
+      'usage.prompts.title': 'AI 架构示例 Prompts',
+      'usage.tag.app': '应用架构',
+      'usage.tag.data': '数据架构',
+      'usage.tag.deploy': '部署架构',
+      'usage.tag.module': '模块架构',
+      'usage.tag.seq': '时序图',
+      'usage.ex.app': '"画一个 RAG 问答平台的应用架构图，使用 Tech 主题"',
+      'usage.ex.data': '"生成 AI 知识库系统的数据处理流水线架构图"',
+      'usage.ex.deploy': '"画出生产环境 AI 推理服务的部署架构，包含 GPU 集群和监控"',
+      'usage.ex.module': '"绘制 AI Agent 框架的模块架构图，使用 Dark Mode 主题"',
+      'usage.ex.seq': '"画用户与 LLM 服务交互的时序图，包含 RAG 检索过程"',
+      'usage.kb.title': '键盘快捷键',
+      'usage.kb.subtitle': '在生成的 HTML 文件中：',
+      'usage.kb.zoomin': '放大',
+      'usage.kb.zoomout': '缩小',
+      'usage.kb.reset': '重置视图',
+      'usage.kb.print': '打印',
+      'usage.output.title': '输出文件',
+      'usage.output.desc': 'Claude 在当前目录写入 <code style="font-family:var(--mono);background:var(--surface2);padding:2px 5px;border-radius:4px">.html</code> 文件。用任意浏览器打开——无需服务器。',
+      'engines.label': '渲染引擎',
+      'engines.h2': '为每种图表选择最佳引擎',
+      'engines.desc': 'Claude 根据图表类型自动选择最合适的渲染引擎。',
+      'engines.th.engine': '引擎',
+      'engines.th.best': '最适合',
+      'engines.th.method': '方式',
+      'engines.th.dep': '依赖',
+      'engines.mermaid.best': '流程图、时序图、ER 图、状态图、类图、甘特图、思维导图',
+      'engines.d2.best': '基础设施、云部署、网络拓扑图',
+      'engines.plantuml.best': 'C4 架构图（Context、Container、Component）',
+      'engines.dep.none': '无',
+      'cta.h2': '即刻开始绘图',
+      'cta.desc': '安装技能后，用文字描述生成生产级图表。',
+      'cta.github': '查看 GitHub',
+      'cta.install': '安装指南',
+      'footer.built': '为 <a href="https://claude.ai/code">Claude Code</a> 构建 · MIT 许可证',
+      'theme.suffix': ' 主题'
+    }
+  };
+
+  // ── Language state ──
+  let currentLang = 'en';
+
+  function applyLang(lang) {
+    currentLang = lang;
+    const dict = T[lang];
+
+    // text-only elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) el.textContent = dict[key];
+    });
+
+    // HTML-content elements
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+
+    // Update lang toggle button label
+    document.getElementById('lang-toggle').textContent = lang === 'zh' ? 'EN' : '中文';
+
+    // Update html lang attribute
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+
+    // Persist
+    try { localStorage.setItem('diagram-arch-lang', lang); } catch(e) {}
+
+    // Re-render diagram with updated title/desc
+    renderDiagram();
+  }
+
+  function toggleLang() {
+    applyLang(currentLang === 'zh' ? 'en' : 'zh');
+  }
+
   // ── Theme configurations ──
   const themeConfigs = {
     corporate: { label:'Corporate', bgColor:'#f8fafc', config:{ theme:'base', themeVariables:{ primaryColor:'#1e3a5a', primaryTextColor:'#ffffff', primaryBorderColor:'#1e40af', lineColor:'#64748b', secondaryColor:'#3b82f6', tertiaryColor:'#e0e7ff', background:'#f8fafc', edgeLabelBackground:'#ffffff' } } },
@@ -589,8 +829,6 @@ flowchart LR
   // ── AI Architecture diagram sources ──
   const diagrams = {
     app: {
-      title: 'AI 应用架构',
-      desc:  'RAG 问答平台 — 从客户端到 LLM 服务的完整分层架构',
       source: `flowchart LR
     subgraph CLIENT["客户端层"]
         WEB["Web 应用"]:::c
@@ -627,8 +865,6 @@ flowchart LR
     classDef d fill:#f59e0b,stroke:#d97706,color:#fff`
     },
     data: {
-      title: 'AI 数据架构',
-      desc:  'AI 知识库数据流水线 — 从采集到 RAG 检索生成的全链路',
       source: `flowchart LR
     subgraph SRC["数据源"]
         PDF["PDF 文档"]:::s
@@ -665,8 +901,6 @@ flowchart LR
     classDef sv fill:#10b981,stroke:#059669,color:#fff`
     },
     deploy: {
-      title: 'AI 部署架构',
-      desc:  '生产级 GPU 推理集群完整部署拓扑 — 含边缘层、计算层与运维层',
       source: `flowchart TD
     USERS["用户 / 客户端"]:::u
     subgraph EDGE["边缘层"]
@@ -710,8 +944,6 @@ flowchart LR
     classDef o fill:#10b981,stroke:#059669,color:#fff`
     },
     module: {
-      title: 'AI 模块架构',
-      desc:  'AI Agent 框架 — 核心、模型、记忆、工具四层模块组成',
       source: `flowchart LR
     subgraph AGENT["Agent 核心"]
         PLAN["任务规划"]:::core
@@ -749,16 +981,19 @@ flowchart LR
 
   // ── Render ──
   async function renderDiagram() {
-    const diag = diagrams[currentType];
-    const cfg  = themeConfigs[currentTheme];
-    const themeLabel = { corporate:'Corporate', dark:'Dark Mode', minimal:'Minimal', tech:'Tech', warm:'Warm' }[currentTheme];
-    document.getElementById('preview-title').textContent = diag.title + ' — ' + themeLabel + ' 主题';
-    document.getElementById('preview-desc').textContent  = diag.desc;
+    const cfg        = themeConfigs[currentTheme];
+    const themeLabel = cfg.label;
+    const suffix     = T[currentLang]['theme.suffix'];
+    const title      = T[currentLang]['diag.' + currentType + '.title'];
+    const desc       = T[currentLang]['diag.' + currentType + '.desc'];
+
+    document.getElementById('preview-title').textContent = title + ' — ' + themeLabel + suffix;
+    document.getElementById('preview-desc').textContent  = desc;
     document.getElementById('preview-body').style.background = cfg.bgColor;
 
     const container = document.getElementById('live-diagram');
     container.removeAttribute('data-processed');
-    container.innerHTML = '%%{init: ' + JSON.stringify(cfg.config) + '}%%\n' + diag.source;
+    container.innerHTML = '%%{init: ' + JSON.stringify(cfg.config) + '}%%\n' + diagrams[currentType].source;
     mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', ...cfg.config });
     try { await mermaid.run({ nodes: [container] }); } catch(e) { console.warn(e); }
   }
@@ -787,8 +1022,16 @@ flowchart LR
     document.getElementById('tab-' + id).classList.add('active');
   }
 
-  // ── Init ──
-  mermaid.initialize({ startOnLoad: true, securityLevel: 'loose', theme: 'base',
+  // ── Init: detect language ──
+  (function init() {
+    let lang = 'en';
+    try { lang = localStorage.getItem('diagram-arch-lang') || lang; } catch(e) {}
+    if (lang === 'en' && navigator.language.toLowerCase().startsWith('zh')) lang = 'zh';
+    applyLang(lang);
+  })();
+
+  // Init Mermaid (initial render handled by applyLang → renderDiagram)
+  mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: 'base',
     themeVariables: themeConfigs.corporate.config.themeVariables
   });
 </script>
