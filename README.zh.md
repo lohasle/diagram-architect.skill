@@ -253,12 +253,55 @@ flowchart LR
 
 ---
 
+### 5. Azure 部署架构图（含云服务图标）
+
+**描述什么**：Azure 生产级 Hub-Spoke 网络拓扑，附带真实服务图标 — VNet 边界、防火墙、AKS、应用网关、Key Vault、SQL、Redis 等。
+**适用场景**：云架构评审、基础设施规划、网络安全设计、Azure 落地文档。
+
+**Prompt 示例：**
+```
+画一张 Azure Hub-Spoke 部署架构图，包含网络安全层和共享服务
+```
+
+**效果：**
+
+![Azure Hub-Spoke 部署架构图（含图标）](assets/screenshots/azure-icons-demo.png)
+
+**核心特性：** 在 D2 源码中使用 `@azure:ALIAS`，`generate.py` 自动将 SVG 内嵌为 base64 数据 URI，生成完全自包含的 HTML 文件，无需额外网络请求加载图标。
+
+```d2
+hub: Hub VNet {
+  icon: "@azure:vnet"
+
+  fw: Firewall {
+    icon: "@azure:firewall"
+    shape: image
+  }
+  vpn: VPN Gateway {
+    icon: "@azure:vpn-gateway"
+    shape: image
+  }
+}
+
+spoke: App Spoke {
+  aks: AKS Cluster {
+    icon: "@azure:kubernetes"
+    shape: image
+  }
+}
+```
+
+**内置 43 个 Azure 图标** — 完整目录见 [references/azure-icons.md](references/azure-icons.md)。
+
+---
+
 ## 功能特性
 
 | 特性 | 说明 |
 |------|------|
 | **图表类型** | 流程图、时序图、ER 图、状态图、类图、思维导图、甘特图、C4 架构图 |
 | **渲染引擎** | Mermaid.js（CDN 零依赖）、D2（kroki.io API）、PlantUML/C4（kroki.io API） |
+| **Azure 云图标** | 43 个内置 Azure 服务图标，D2 中使用 `@azure:ALIAS`，自动内嵌为 base64 |
 | **主题系统** | Corporate、Dark Mode、Minimal、Tech、Warm — 运行时切换，无需重新生成 |
 | **交互控件** | 缩放（25%–300%）、鼠标拖拽平移、触控拖拽、键盘快捷键 |
 | **导出格式** | SVG 矢量图、2× Retina PNG、打印优化布局 |
@@ -320,6 +363,9 @@ cd diagram-architect && git pull
 diagram-architect/
 ├── SKILL.md                       # Claude Code 技能定义文件
 ├── assets/
+│   ├── icons/
+│   │   └── azure/                 # 43 个 Azure 服务 SVG 图标（vm、kubernetes、vnet...）
+│   ├── screenshots/               # 演示截图
 │   └── templates/
 │       └── diagram.html           # 自包含 HTML 模板（含 Mermaid.js CDN）
 ├── references/
@@ -327,9 +373,11 @@ diagram-architect/
 │   ├── mermaid-patterns.md        # Mermaid 语法与示例
 │   ├── d2-patterns.md             # D2 语法与基础设施图案例
 │   ├── plantuml-c4.md             # C4 模型与 PlantUML
+│   ├── azure-icons.md             # Azure 图标目录（@azure:ALIAS 用法）
 │   ├── design-principles.md       # 图表设计原则与反模式
 │   └── themes.md                  # 5 套主题的颜色定义
 └── scripts/
+    ├── generate.py                # 从模板生成 HTML；自动解析 @azure: 图标
     └── render.py                  # D2/PlantUML → SVG（通过 kroki.io API）
 ```
 

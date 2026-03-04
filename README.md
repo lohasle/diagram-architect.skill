@@ -253,12 +253,55 @@ flowchart LR
 
 ---
 
+### 5. Azure Deployment Architecture (with Cloud Icons)
+
+**What it shows**: Production Hub-Spoke network topology on Azure with real service icons — VNet boundaries, Firewall, AKS, App Gateway, Key Vault, SQL, Redis and more.
+**Use cases**: Cloud architecture reviews, infrastructure planning, network security design, Azure adoption documentation.
+
+**Prompt example:**
+```
+Draw an Azure Hub-Spoke deployment architecture diagram with network security and shared services
+```
+
+**Result:**
+
+![Azure Hub-Spoke Deployment Architecture with Icons](assets/screenshots/azure-icons-demo.png)
+
+**Key feature:** Use `@azure:ALIAS` in D2 source — `generate.py` automatically embeds the SVG as a base64 data URI, keeping the HTML fully self-contained with no internet dependency for icons.
+
+```d2
+hub: Hub VNet {
+  icon: "@azure:vnet"
+
+  fw: Firewall {
+    icon: "@azure:firewall"
+    shape: image
+  }
+  vpn: VPN Gateway {
+    icon: "@azure:vpn-gateway"
+    shape: image
+  }
+}
+
+spoke: App Spoke {
+  aks: AKS Cluster {
+    icon: "@azure:kubernetes"
+    shape: image
+  }
+}
+```
+
+**43 built-in Azure icons** — see [references/azure-icons.md](references/azure-icons.md) for the full catalog.
+
+---
+
 ## Features
 
 | Feature | Description |
 |---------|-------------|
 | **Diagram Types** | Flowchart, Sequence, ER, State, Class, Mind Map, Gantt, C4 Architecture |
 | **Rendering Engines** | Mermaid.js (CDN, zero dependencies), D2 (kroki.io API), PlantUML/C4 (kroki.io API) |
+| **Azure Cloud Icons** | 43 built-in Azure service icons — use `@azure:ALIAS` in D2 diagrams, auto-embedded as base64 |
 | **Theme System** | Corporate, Dark Mode, Minimal, Tech, Warm — runtime switching, no re-generation needed |
 | **Interactive Controls** | Zoom (25%–300%), drag-to-pan (mouse + touch), keyboard shortcuts |
 | **Export Formats** | SVG vector, 2× Retina PNG, print-optimized layout |
@@ -320,6 +363,9 @@ All other diagram types?             → Mermaid.js (CDN, zero dependencies) ✓
 diagram-architect/
 ├── SKILL.md                       # Claude Code skill definition
 ├── assets/
+│   ├── icons/
+│   │   └── azure/                 # 43 Azure service SVG icons (vm, kubernetes, vnet, ...)
+│   ├── screenshots/               # Demo screenshots
 │   └── templates/
 │       └── diagram.html           # Self-contained HTML template (includes Mermaid.js CDN)
 ├── references/
@@ -327,9 +373,11 @@ diagram-architect/
 │   ├── mermaid-patterns.md        # Mermaid syntax and examples
 │   ├── d2-patterns.md             # D2 syntax and infrastructure diagram examples
 │   ├── plantuml-c4.md             # C4 model and PlantUML
+│   ├── azure-icons.md             # Azure icon catalog (@azure:ALIAS usage)
 │   ├── design-principles.md       # Diagram design principles and anti-patterns
 │   └── themes.md                  # Color definitions for all 5 themes
 └── scripts/
+    ├── generate.py                # Generate HTML from template; resolves @azure: icons
     └── render.py                  # D2/PlantUML → SVG (via kroki.io API)
 ```
 

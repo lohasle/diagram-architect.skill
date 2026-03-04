@@ -6,51 +6,66 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 
 # Diagram Architect
 
-Production-grade diagram generation with beautiful, professional themes. Creates self-contained HTML files that open in any browser with zero dependencies.
+Production-grade diagram generation with beautiful, professional themes. Creates self-contained HTML files that open in any browser.
+
+**Three first-class rendering engines:**
+- **Mermaid.js** — Client-side rendering via CDN, 10+ diagram types
+- **D2** — Client-side rendering via kroki.io API, best for infrastructure/cloud layouts
+- **PlantUML** — Client-side rendering via kroki.io API, best for C4 architecture diagrams
+
+The HTML template auto-detects the engine from your source code and renders accordingly.
 
 ## Quick Start
 
 ```bash
-# Locate the HTML template (skill-relative path)
-# assets/templates/diagram.html
+# All engines use the SAME workflow:
+# 1. Read template into memory
+# 2. Replace 3 placeholders: DIAGRAM_TITLE, DIAGRAM_SUBTITLE, DIAGRAM_SOURCE
+# 3. Write to a new output file
 
-# Generate a diagram: copy the template, then replace placeholders:
-# - DIAGRAM_TITLE    → Main heading (e.g., "CMP Platform Architecture")
-# - DIAGRAM_SUBTITLE → Optional subtitle or description
-# - DIAGRAM_SOURCE   → Mermaid diagram source code
+python3 scripts/generate.py \
+  --title "My Diagram" \
+  --source diagram.d2 \
+  --output my-diagram.html
 
-# Output: save as <name>.html (e.g., architecture.html)
+# Open in browser — it just works!
+open my-diagram.html
 ```
 
-## Engine Selection
+## Engine Auto-Detection
 
-Choose the rendering engine based on your needs:
+The template automatically detects which engine to use based on source content:
 
-| Use Case | Engine | Method |
-|-----------|---------|---------|
-| Most diagrams | Mermaid.js | CDN (zero dependency) |
-| Infrastructure/Cloud layouts | D2 | CLI or kroki.io API |
-| C4 Architecture | PlantUML | kroki.io API |
-
-See [references/engine-selection.md](references/engine-selection.md) for detailed guidance.
+| Source Pattern | Engine | Rendering |
+|----------------|--------|-----------|
+| Starts with `@startuml` | PlantUML | kroki.io API |
+| Mermaid keywords (`flowchart`, `sequenceDiagram`, etc.) | Mermaid | Mermaid.js CDN |
+| Anything else | D2 | kroki.io API |
 
 ## Workflow
 
 ### 1. Understand the Request
-- Identify diagram type (flowchart, sequence, ER, architecture, etc.)
+- Identify diagram type (flowchart, sequence, ER, architecture, infrastructure)
 - Identify audience (technical, business, mixed)
 - Identify purpose (overview, deep dive, decision support)
 
 ### 2. Select Engine
-- **Mermaid.js** - Default choice, 10+ diagram types, zero dependency
-- **D2** - Infrastructure diagrams, requires CLI or API
-- **PlantUML** - C4 architecture, use kroki.io API
+
+| Diagram Type | Recommended Engine | Why |
+|--------------|-------------------|-----|
+| Flowchart / Decision tree | Mermaid | Simple syntax, many shapes |
+| Sequence diagram | Mermaid | Native support, clear syntax |
+| ER diagram | Mermaid | Built-in cardinality notation |
+| State diagram | Mermaid | Good transition syntax |
+| Infrastructure / Cloud | **D2** | SQL-like styling, better layouts |
+| C4 Architecture | **PlantUML** | C4-PlantUML library support |
+| Complex architecture | **D2** or **PlantUML** | Rich styling, professional output |
 
 ### 3. Apply Design Principles
 - Limit nodes: Context <10, Container <20, Component <30
-- Use logical grouping with subgraphs
+- Use logical grouping with subgraphs/containers
 - Clear labels: Noun phrases for systems, role names for people
-- Consistent styling: Use theme colors, avoid default Mermaid styles
+- Consistent styling: Use theme colors
 
 See [references/design-principles.md](references/design-principles.md) for guidelines.
 
@@ -64,9 +79,43 @@ See [references/design-principles.md](references/design-principles.md) for guide
 | Tech | #7c3aed (Purple) | Startups, AI/ML |
 | Warm | #92400e (Brown) | Tutorials, education |
 
-See [references/themes.md](references/themes.md) for full theme definitions.
+### 5. Use Azure Icons (Deployment Diagrams)
 
-### 5. Generate Diagram Code
+For D2 infrastructure/deployment diagrams, embed Azure service icons using `@azure:ALIAS`:
+
+```d2
+# Syntax: icon: "@azure:ALIAS"
+vm: Web Server {
+  icon: "@azure:vm"
+  shape: image
+}
+
+lb: Load Balancer {
+  icon: "@azure:load-balancer"
+}
+
+k8s: AKS Cluster {
+  icon: "@azure:kubernetes"
+}
+```
+
+`generate.py` automatically converts `@azure:ALIAS` → base64 SVG data URI (no internet required).
+
+**Key aliases:**
+
+| Category | Aliases |
+|----------|---------|
+| Compute | `vm`, `vm-scale-set`, `kubernetes`, `container`, `app-service`, `function` |
+| Network | `vnet`, `load-balancer`, `app-gateway`, `vpn-gateway`, `firewall`, `front-door`, `dns`, `nsg`, `bastion` |
+| Data | `storage`, `sql`, `cosmos-db`, `redis`, `postgresql`, `mysql`, `databricks`, `synapse` |
+| Security | `key-vault`, `managed-identity` |
+| Integration | `api-management`, `service-bus`, `event-hub` |
+| Monitoring | `monitor`, `app-insights`, `log-analytics` |
+| AI/IoT | `openai`, `machine-learning`, `iot-hub` |
+
+See [references/azure-icons.md](references/azure-icons.md) for the complete catalog with D2 examples.
+
+### 6. Write Diagram Source Code
 
 **Mermaid Flowchart:**
 ```mermaid
@@ -81,7 +130,7 @@ flowchart LR
     Service --> DB[(Database)]
 ```
 
-**Sequence Diagram:**
+**Mermaid Sequence:**
 ```mermaid
 sequenceDiagram
     User->>API: Request
@@ -90,37 +139,93 @@ sequenceDiagram
     API-->>User: Response
 ```
 
-**ER Diagram:**
-```mermaid
-erDiagram
-    USER ||--o{ ORDER : places
-    ORDER {
-        uuid id PK
-        uuid user_id FK
-        enum status
-    }
+**D2 Infrastructure (auto-detected):**
+```d2
+# D2 is auto-detected when source doesn't match Mermaid or PlantUML patterns
+direction: right
+
+User: {
+  shape: person
+}
+
+API Gateway: {
+  style.fill: "#1e3a5a"
+  style.font-color: white
+}
+
+Order Service: {
+  style.fill: "#3b82f6"
+  style.font-color: white
+}
+
+Database: {
+  shape: cylinder
+  style.fill: "#64748b"
+  style.font-color: white
+}
+
+User -> API Gateway: HTTPS
+API Gateway -> Order Service: gRPC
+Order Service -> Database: Query
 ```
 
-### 6. Wrap in HTML Template
+**PlantUML C4 (auto-detected by @startuml):**
+```plantuml
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-Replace placeholders in the template:
-- `DIAGRAM_TITLE` - Main heading
-- `DIAGRAM_SUBTITLE` - Optional subtitle
-- `DIAGRAM_SOURCE` - Mermaid/D2/PlantUML source code
+Person(user, "User", "End user of the system")
+Container(api, "API Gateway", "Node.js", "Routes requests to services")
+Container(service, "Order Service", "Java/Spring", "Handles order logic")
+ContainerDb(db, "Database", "PostgreSQL", "Stores order data")
 
-Example transformation:
-```html
-<!-- Template -->
-<h1 class="diagram-title" id="diagram-title">DIAGRAM_TITLE</h1>
-<div class="mermaid">DIAGRAM_SOURCE</div>
+Rel(user, api, "Uses", "HTTPS")
+Rel(api, service, "Calls", "gRPC")
+Rel(service, db, "Reads/Writes", "SQL")
+@enduml
+```
 
-<!-- Generated -->
-<h1 class="diagram-title" id="diagram-title">CMP Platform Architecture</h1>
-<div class="mermaid">
-flowchart LR
-    CMP[Platform] --> DMP[DMP]
-    CMP --> Cloud[IoT Cloud]
-</div>
+### 6. Generate HTML Output
+
+**Using the helper script (recommended):**
+```bash
+python3 scripts/generate.py \
+  --title "CMP Platform Architecture" \
+  --subtitle "System Context Overview" \
+  --source diagram.d2 \
+  --output /output/my-diagram.html
+```
+
+**Manual approach (Read → Replace → Write):**
+```python
+# Read template into memory
+with open('/path/to/diagram.html', 'r') as f:
+    content = f.read()
+
+# Replace placeholders IN MEMORY (never modify template directly)
+content = content.replace('DIAGRAM_TITLE', 'CMP Platform Architecture')
+content = content.replace('DIAGRAM_SUBTITLE', 'System Context Overview')
+content = content.replace('DIAGRAM_SOURCE', '''@startuml
+!include C4_Container.puml
+Person(user, "User")
+Container(api, "API", "Node.js")
+Rel(user, api, "Uses")
+@enduml''')
+
+# Write to NEW output file
+with open('/output/my-diagram.html', 'w') as f:
+    f.write(content)
+```
+
+**CRITICAL — What NOT to do:**
+- DO NOT modify the original template file directly
+- DO NOT use Edit tool on the template file to replace placeholders
+- DO NOT lose the closing `</div>` tags after DIAGRAM_SOURCE
+
+**Verify output:**
+```bash
+grep -c "DIAGRAM_TITLE\|DIAGRAM_SUBTITLE\|DIAGRAM_SOURCE" output.html
+# Should output: 0 (zero remaining placeholders)
 ```
 
 ## Reference Patterns
@@ -131,25 +236,30 @@ See [references/mermaid-patterns.md](references/mermaid-patterns.md) for:
 - Sequence diagram messages and activations
 - ER diagram cardinalities
 - State diagram transitions
-- Quality examples (bad/good/excellent)
 
 ### D2 Patterns
 See [references/d2-patterns.md](references/d2-patterns.md) for:
 - Infrastructure diagram patterns
 - Cloud deployment layouts
-- SQL class syntax for styling
-- kroki.io API usage
+- SQL-like styling syntax
+- Shape types (person, cylinder, hexagon, etc.)
 
 ### PlantUML C4 Patterns
 See [references/plantuml-c4.md](references/plantuml-c4.md) for:
-- C4 model (Context/Container/Component)
+- C4 model levels (Context/Container/Component)
 - C4-PlantUML library includes
-- IoT platform architecture template
-- kroki.io API rendering
+- Custom styling with skinparam
+- Layout macros
 
 ## HTML Template Features
 
 The template at `assets/templates/diagram.html` includes:
+
+### Multi-Engine Rendering
+- **Auto-detection**: Detects Mermaid/D2/PlantUML from source
+- **Mermaid**: Client-side via Mermaid.js CDN
+- **D2/PlantUML**: Client-side via kroki.io API (CORS-enabled)
+- **Engine badge**: Shows current engine in header
 
 ### Interactive Controls
 - **Theme switcher** - 5 professional themes
@@ -168,10 +278,10 @@ The template at `assets/templates/diagram.html` includes:
 ### Drag to Pan
 Click and drag on the diagram to pan large diagrams.
 
-### Responsive Design
-- Mobile-friendly controls
-- Auto-adjusts to screen size
-- Print styles for clean output
+### Error Handling
+- Loading state with spinner
+- Error state with retry button
+- Graceful failure messages
 
 ## Quality Checklist
 
@@ -187,8 +297,7 @@ Before delivering a diagram, verify:
 
 ## Common Patterns
 
-### System Architecture
-Use Mermaid flowchart with subgraphs for layers:
+### System Architecture (Mermaid)
 ```mermaid
 flowchart LR
     subgraph PRESENTATION [Presentation]
@@ -203,29 +312,41 @@ flowchart LR
     PRESENTATION --> SERVICES --> DATA
 ```
 
-### API Flow
-Use Mermaid sequence:
-```mermaid
-sequenceDiagram
-    Client->>Gateway: POST /orders
-    Gateway->>Auth: Validate token
-    Auth-->>Gateway: Valid
-    Gateway->>Order: Create order
-    Order->>DB: INSERT
-    Order-->>Gateway: Created
-    Gateway-->>Client: 201 Created
+### Cloud Infrastructure (D2)
+```d2
+direction: right
+
+Cloud: {
+  AWS: {
+    API Gateway -> Lambda -> DynamoDB
+  }
+  style.fill: "#232F3E"
+  style.font-color: white
+}
+
+OnPrem: {
+  Server: {
+    shape: hexagon
+  }
+  style.fill: "#64748b"
+}
+
+Cloud.AWS.Lambda -> OnPrem.Server: VPN
 ```
 
-### C4 Architecture
-Use PlantUML with C4 library:
+### C4 Architecture (PlantUML)
 ```plantuml
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-Person(user, "User")
-Container(api, "API", "Node.js")
-ContainerDb(db, "Database", "PostgreSQL")
-Rel(user, api, "Uses")
-Rel(api, db, "Reads/Writes")
+
+Person(user, "User", "Application user")
+Container(web, "Web App", "React", "SPA frontend")
+Container(api, "API", "Node.js", "REST API")
+ContainerDb(db, "Database", "PostgreSQL", "Data storage")
+
+Rel(user, web, "Uses", "Browser")
+Rel(web, api, "Calls", "HTTPS/JSON")
+Rel(api, db, "Reads/Writes", "SQL")
 @enduml
 ```
 
@@ -238,14 +359,15 @@ Rel(api, db, "Reads/Writes")
 - `plantuml-c4.md` - C4 model with PlantUML
 - `design-principles.md` - Quality guidelines and anti-patterns
 - `themes.md` - 5 professional themes with color codes
+- `azure-icons.md` - Azure icon catalog (43 icons, `@azure:ALIAS` usage)
 
 ### assets/templates/
-- `diagram.html` - Self-contained HTML template with Mermaid.js CDN, theme system, interactive controls
-  - **Mermaid diagrams**: Replace `DIAGRAM_SOURCE` with Mermaid source. Renders client-side via CDN.
-  - **D2/PlantUML diagrams**: Use `scripts/render.py` to produce an SVG/PNG first, then embed it in the template as `<img src="data:image/svg+xml;base64,...">` inside the `#mermaid-diagram` div.
+- `diagram.html` - Self-contained HTML template with multi-engine support
+
+### assets/icons/azure/
+- 43 Azure SVG icons (vm, kubernetes, vnet, storage, sql, cosmos-db, etc.)
+- Used via `@azure:ALIAS` syntax in D2 diagrams
 
 ### scripts/
-- `render.py` - Render D2 or PlantUML diagrams to SVG/PNG via kroki.io API
-  - Usage: `python render.py input.d2 output.svg`
-  - For PlantUML: `python render.py input.puml output.svg --engine plantuml`
-  - Requires: `pip install requests`
+- `generate.py` - Generate HTML from template; auto-resolves `@azure:` icons to base64
+- `render.py` - (Optional) CLI tool for server-side kroki.io rendering

@@ -285,6 +285,7 @@
       <div class="stat"><div class="stat-num" style="color:#38bdf8">5</div><div class="stat-label" data-i18n="stat.themes">Professional Themes</div></div>
       <div class="stat"><div class="stat-num" style="color:#34d399">0</div><div class="stat-label" data-i18n="stat.deps">Runtime Dependencies</div></div>
       <div class="stat"><div class="stat-num" style="color:#f59e0b">3</div><div class="stat-label" data-i18n="stat.engines">Rendering Engines</div></div>
+      <div class="stat"><div class="stat-num" style="color:#60a5fa">43</div><div class="stat-label" data-i18n="stat.icons">Azure Icons</div></div>
     </div>
   </div>
 </section>
@@ -328,6 +329,47 @@
         <h3 data-i18n="feature.print.title">Print Ready</h3>
         <p data-i18n="feature.print.desc">Print-optimized CSS hides controls, removes backgrounds, and ensures clean output for documentation and slides.</p>
       </div>
+      <div class="feature-card" style="border-color:rgba(14,165,233,.3)">
+        <div class="feature-icon" style="background:rgba(14,165,233,.15)">☁️</div>
+        <h3 data-i18n="feature.icons.title">43 Azure Cloud Icons</h3>
+        <p data-i18n="feature.icons.desc">Built-in Azure service icons (VM, AKS, Firewall, SQL, Key Vault…). Use <code style="font-family:var(--mono);background:var(--surface2);padding:1px 5px;border-radius:4px;font-size:12px">@azure:alias</code> in D2 diagrams — automatically embedded as base64, no internet needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Azure Icons Preview -->
+<section style="background: linear-gradient(180deg, transparent, rgba(14,165,233,.04), transparent);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label" style="color:var(--accent2)" data-i18n="icons.label">Azure Icons</div>
+      <h2 data-i18n="icons.h2">Real service icons in deployment diagrams</h2>
+      <p class="section-desc" data-i18n="icons.desc">Use <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:14px">@azure:alias</code> in D2 source. Icons are embedded as base64 — the output HTML is fully self-contained.</p>
+    </div>
+    <div class="diagram-preview">
+      <div class="preview-bar">
+        <div class="preview-dot" style="background:#ef4444"></div>
+        <div class="preview-dot" style="background:#f59e0b"></div>
+        <div class="preview-dot" style="background:#10b981"></div>
+        <span class="preview-title" data-i18n="icons.preview-title">Azure Hub-Spoke Deployment Architecture — D2 engine with @azure: icons</span>
+      </div>
+      <div style="padding:0;overflow:hidden;border-radius:0 0 var(--radius) var(--radius)">
+        <img src="../assets/screenshots/azure-icons-demo.png"
+             alt="Azure Hub-Spoke deployment diagram with cloud icons"
+             style="width:100%;display:block;border-radius:0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px)">
+      </div>
+    </div>
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:vm</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:kubernetes</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:firewall</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:load-balancer</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:sql</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:cosmos-db</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:key-vault</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:storage</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--accent2)">@azure:openai</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-family:var(--mono);color:var(--text-muted)">+34 more…</div>
     </div>
   </div>
 </section>
@@ -497,6 +539,10 @@ flowchart LR
           <div class="example-item">
             <span class="example-tag" data-i18n="usage.tag.seq">Sequence</span>
             <span data-i18n="usage.ex.seq">"Draw a sequence diagram for user interactions with LLM service including RAG retrieval"</span>
+          </div>
+          <div class="example-item" style="border-color:rgba(14,165,233,.3)">
+            <span class="example-tag" style="color:var(--accent2)" data-i18n="usage.tag.azure">Azure Icons</span>
+            <span data-i18n="usage.ex.azure">"Draw an Azure Hub-Spoke deployment architecture with firewall, AKS, SQL and Key Vault using @azure icons"</span>
           </div>
         </div>
       </div>
@@ -677,6 +723,15 @@ flowchart LR
       'engines.d2.best': 'Infrastructure, cloud deployment, network topology',
       'engines.plantuml.best': 'C4 Architecture (Context, Container, Component)',
       'engines.dep.none': 'None',
+      'stat.icons': 'Azure Icons',
+      'feature.icons.title': '43 Azure Cloud Icons',
+      'feature.icons.desc': 'Built-in Azure service icons (VM, AKS, Firewall, SQL, Key Vault…). Use <code style="font-family:var(--mono);background:var(--surface2);padding:1px 5px;border-radius:4px;font-size:12px">@azure:alias</code> in D2 diagrams — automatically embedded as base64, no internet needed.',
+      'icons.label': 'Azure Icons',
+      'icons.h2': 'Real service icons in deployment diagrams',
+      'icons.desc': 'Use <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:14px">@azure:alias</code> in D2 source. Icons are embedded as base64 — the output HTML is fully self-contained.',
+      'icons.preview-title': 'Azure Hub-Spoke Deployment Architecture — D2 engine with @azure: icons',
+      'usage.tag.azure': 'Azure Icons',
+      'usage.ex.azure': '"Draw an Azure Hub-Spoke deployment architecture with firewall, AKS, SQL and Key Vault using @azure icons"',
       'cta.h2': 'Start drawing in seconds',
       'cta.desc': 'Install the skill and turn text descriptions into production-ready diagrams.',
       'cta.github': 'View on GitHub',
@@ -699,6 +754,7 @@ flowchart LR
       'stat.themes': '专业主题',
       'stat.deps': '运行时依赖',
       'stat.engines': '渲染引擎',
+      'stat.icons': 'Azure 图标',
       'features.label': '功能特性',
       'features.h2': '一切封装在单个 HTML 文件',
       'features.desc': '每张生成的图表都是独立自包含的 HTML 文件——打开即用，无需服务器。',
@@ -714,6 +770,12 @@ flowchart LR
       'feature.types.desc': '流程图、时序图、ER 图、状态图、类图、思维导图、甘特图、C4 架构图——全从纯文本生成。',
       'feature.print.title': '打印优化',
       'feature.print.desc': '打印优化 CSS 自动隐藏控件、移除背景色，确保文档和幻灯片输出整洁。',
+      'feature.icons.title': '43 个 Azure 云服务图标',
+      'feature.icons.desc': '内置 Azure 服务图标（VM、AKS、防火墙、SQL、Key Vault…）。在 D2 图表中使用 <code style="font-family:var(--mono);background:var(--surface2);padding:1px 5px;border-radius:4px;font-size:12px">@azure:别名</code>——自动内嵌为 base64，无需网络。',
+      'icons.label': 'Azure 图标',
+      'icons.h2': '部署架构图中的真实服务图标',
+      'icons.desc': '在 D2 源码中使用 <code style="font-family:var(--mono);background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:14px">@azure:别名</code>。图标内嵌为 base64，输出 HTML 完全自包含。',
+      'icons.preview-title': 'Azure Hub-Spoke 部署架构 — D2 引擎，含 @azure: 图标',
       'demo.label': '实时演示',
       'demo.h2': 'AI 架构图四大维度',
       'demo.desc': '点击架构类型切换图表，点击色块切换主题——实时渲染，零延迟。',
@@ -753,6 +815,8 @@ flowchart LR
       'usage.ex.deploy': '"画出生产环境 AI 推理服务的部署架构，包含 GPU 集群和监控"',
       'usage.ex.module': '"绘制 AI Agent 框架的模块架构图，使用 Dark Mode 主题"',
       'usage.ex.seq': '"画用户与 LLM 服务交互的时序图，包含 RAG 检索过程"',
+      'usage.tag.azure': 'Azure 图标',
+      'usage.ex.azure': '"画一张 Azure Hub-Spoke 部署架构图，含防火墙、AKS、SQL 和 Key Vault，使用 @azure 图标"',
       'usage.kb.title': '键盘快捷键',
       'usage.kb.subtitle': '在生成的 HTML 文件中：',
       'usage.kb.zoomin': '放大',
